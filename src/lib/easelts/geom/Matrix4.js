@@ -1,25 +1,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], function (require, exports, MathUtil_1, AbstractMath3D_1) {
-    /**
-     * All credit should go to everyone at Threejs
-     *
-     * @class Matrix4
-     * @author mrdoob / http://mrdoob.com/
-     * @author supereggbert / http://www.paulbrunt.co.uk/
-     * @author philogb / http://blog.thejit.org/
-     * @author jordi_ros / http://plattsoft.com
-     * @author D1plo1d / http://github.com/D1plo1d
-     * @author alteredq / http://alteredqualia.com/
-     * @author mikael emtinger / http://gomo.se/
-     * @author timknip / http://www.floorplanner.com/
-     * @author bhouston / http://exocortex.com
-     * @author WestLangley / http://github.com/WestLangley
-     */
     var Matrix4 = (function (_super) {
         __extends(Matrix4, _super);
         function Matrix4() {
@@ -174,11 +158,9 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
                 te[6] = b * e;
                 te[10] = bd * f + ac;
             }
-            // last column
             te[3] = 0;
             te[7] = 0;
             te[11] = 0;
-            // bottom row
             te[12] = 0;
             te[13] = 0;
             te[14] = 0;
@@ -201,11 +183,9 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             te[2] = xz - wy;
             te[6] = yz + wx;
             te[10] = 1 - (xx + yy);
-            // last column
             te[3] = 0;
             te[7] = 0;
             te[11] = 0;
-            // bottom row
             te[12] = 0;
             te[13] = 0;
             te[14] = 0;
@@ -333,8 +313,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             var n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
             var n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
             var n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
-            //TODO: make this more efficient
-            //( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
             return (n41 * (+n14 * n23 * n32
                 - n13 * n24 * n32
                 - n14 * n22 * n33
@@ -412,7 +390,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
         };
         Matrix4.prototype.getInverse = function (m, throwOnInvertible) {
             if (throwOnInvertible === void 0) { throwOnInvertible = false; }
-            // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
             var te = this.elements;
             var me = m.elements;
             var n11 = me[0], n12 = me[4], n13 = me[8], n14 = me[12];
@@ -477,12 +454,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             this.set(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
             return this;
         };
-        /**
-         * theta — Rotation angle in radians.
-         * Sets this matrix as rotation transform around x axis by theta radians.
-         * @param theta
-         * @returns {Matrix4}
-         */
         Matrix4.prototype.makeRotationX = function (theta) {
             var c = Math.cos(theta), s = Math.sin(theta);
             this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
@@ -499,7 +470,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             return this;
         };
         Matrix4.prototype.makeRotationAxis = function (axis, angle) {
-            // Based on http://www.gamedev.net/reference/articles/article1199.asp
             var c = Math.cos(angle);
             var s = Math.sin(angle);
             var t = 1 - c;
@@ -525,7 +495,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             var sx = decomposeVector.set(te[0], te[1], te[2]).length();
             var sy = decomposeVector.set(te[4], te[5], te[6]).length();
             var sz = decomposeVector.set(te[8], te[9], te[10]).length();
-            // if determine is negative, we need to invert one scale
             var det = this.determinant();
             if (det < 0) {
                 sx = -sx;
@@ -533,8 +502,7 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             position.x = te[12];
             position.y = te[13];
             position.z = te[14];
-            // scale the rotation part
-            decomposeMatrix.elements.set(this.elements); // at this point matrix is incomplete so we can't use .copy()
+            decomposeMatrix.elements.set(this.elements);
             var invSX = 1 / sx;
             var invSY = 1 / sy;
             var invSZ = 1 / sz;
@@ -630,5 +598,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
         };
         return Matrix4;
     })(AbstractMath3D_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Matrix4;
 });

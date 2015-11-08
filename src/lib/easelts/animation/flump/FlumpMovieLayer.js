@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../../display/DisplayObject', './FlumpKeyframeData', './FlumpTexture', './FlumpLabelData'], function (require, exports, DisplayObject_1, FlumpKeyframeData_1, FlumpTexture_1, FlumpLabelData_1) {
     var FlumpMovieLayer = (function (_super) {
@@ -35,7 +34,6 @@ define(["require", "exports", '../../display/DisplayObject', './FlumpKeyframeDat
             }
             this.setFrame(0);
         }
-        //Matrix get transformationMatrix => _transformationMatrix;
         FlumpMovieLayer.prototype.onTick = function (delta) {
             if (this._symbol != null && !(this._symbol instanceof FlumpTexture_1.default)) {
                 this._symbol.onTick(delta);
@@ -126,5 +124,6 @@ define(["require", "exports", '../../display/DisplayObject', './FlumpKeyframeDat
         };
         return FlumpMovieLayer;
     })(DisplayObject_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpMovieLayer;
 });

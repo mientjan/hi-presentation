@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exports, AbstractMath3D_1) {
     var Quaternion = (function (_super) {
@@ -136,7 +135,6 @@ define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exp
         };
         Quaternion.prototype.setFromAxisAngle = function (axis, angle) {
             // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
-            // assumes axis is normalized
             var halfAngle = angle / 2, s = Math.sin(halfAngle);
             this._x = axis.x * s;
             this._y = axis.y * s;
@@ -145,10 +143,8 @@ define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exp
             this.onChangeCallback();
             return this;
         };
-        // Matrix4
         Quaternion.prototype.setFromRotationMatrix = function (m) {
             // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
-            // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var te = m.elements, m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10], trace = m11 + m22 + m33, s;
             if (trace > 0) {
                 s = 0.5 / Math.sqrt(trace + 1.0);
@@ -182,8 +178,6 @@ define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exp
             return this;
         };
         Quaternion.prototype.setFromUnitVectors = function (vFrom, vTo) {
-            // http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
-            // assumes direction vectors vFrom and vTo are normalized
             var v1 = this.getVector3('_setFromUnitVectors_v1'), r = this._setFromUnitVectors_r;
             var EPS = 0.000001;
             r = vFrom.dot(vTo) + 1;
@@ -266,7 +260,6 @@ define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exp
                 return this.copy(qb);
             }
             var x = this._x, y = this._y, z = this._z, w = this._w;
-            // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
             var cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z;
             if (cosHalfTheta < 0) {
                 this._w = -qb._w;
@@ -340,5 +333,6 @@ define(["require", "exports", "./math3d/AbstractMath3D"], function (require, exp
         };
         return Quaternion;
     })(AbstractMath3D_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Quaternion;
 });

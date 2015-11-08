@@ -1,10 +1,4 @@
 define(["require", "exports", "./Vector3"], function (require, exports, Vector3_1) {
-    /**
-     * @method Matrix3
-     * @author alteredq / http://alteredqualia.com/
-     * @author WestLangley / http://github.com/WestLangley
-     * @author bhouston / http://exocortex.com
-     */
     var Matrix3 = (function () {
         function Matrix3() {
             this.__v0 = null;
@@ -92,7 +86,6 @@ define(["require", "exports", "./Vector3"], function (require, exports, Vector3_
             te[7] = -me[9] * me[0] + me[1] * me[8];
             te[8] = me[5] * me[0] - me[1] * me[4];
             var det = me[0] * te[0] + me[1] * te[3] + me[2] * te[6];
-            // no inverse
             if (det === 0) {
                 var msg = "Matrix3.getInverse(): can't invert matrix, determinant is 0";
                 if (throwOnInvertible || false) {
@@ -168,5 +161,6 @@ define(["require", "exports", "./Vector3"], function (require, exports, Vector3_
         };
         return Matrix3;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Matrix3;
 });

@@ -4,29 +4,15 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../display/DisplayObject", "../display/SpriteSheet", "../../createts/util/Promise"], function (require, exports, DisplayObject_1, SpriteSheet_1, Promise_1) {
-    /**
-     * @class ImageSequence
-     */
     var ImageSequence = (function (_super) {
         __extends(ImageSequence, _super);
-        /**
-         *
-         * @param {string[]} images
-         * @param {number} fps
-         * @param {string|number} width
-         * @param {string|number} height
-         * @param {string|number} x
-         * @param {string|number} y
-         * @param {string|number} regX
-         * @param {string|number} regY
-         */
         function ImageSequence(spriteSheet, fps, width, height, x, y, regX, regY) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (regX === void 0) { regX = 0; }
             if (regY === void 0) { regY = 0; }
             _super.call(this, width, height, x, y, regX, regY);
-            this.type = 8 /* BITMAP */;
+            this.type = 8;
             this._playing = false;
             this._timeIndex = -1;
             this._frame = 0;

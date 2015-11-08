@@ -4,7 +4,6 @@ define(["require", "exports", './FlumpKeyframeData'], function (require, exports
             this.flumpKeyframeDatas = [];
             this.name = json.name;
             this.flipbook = 'flipbook' in json ? !!json.flipbook : false;
-            //
             var keyframes = json.keyframes;
             var keyFrameData = null;
             for (var i = 0; i < keyframes.length; i++) {
@@ -33,5 +32,6 @@ define(["require", "exports", './FlumpKeyframeData'], function (require, exports
         };
         return FlumpLayerData;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpLayerData;
 });

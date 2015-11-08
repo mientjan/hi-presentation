@@ -1,5 +1,4 @@
 define(["require", "exports", "./Functional"], function (require, exports, Functional) {
-    // for auto import
     var Decorator = (function () {
         function Decorator() {
         }

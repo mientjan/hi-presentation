@@ -28,30 +28,11 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"], function (require, exports, Bitmap_1, Rectangle_1, Vector2_1) {
-    /**
-     * @author Mient-jan Stelling
-     * @class BitmapProjective
-     */
     var BitmapProjective = (function (_super) {
         __extends(BitmapProjective, _super);
-        /**
-         * @class BitmapProjective
-         * @constructor
-         * @param {HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|string} imageOrUri The source object or URI to an image to
-         * display. This can be either an Image, Canvas, or Video object, or a string URI to an image file to load and use.
-         * If it is a URI, a new Image object will be constructed and assigned to the `.image` property.
-         * @param {Array<Array<number>>} points
-         * @param {string|number} width
-         * @param {string|number} height
-         * @param {string|number} x
-         * @param {string|number} y
-         * @param {string|number} regX
-         * @param {string|number} regY
-         */
         function BitmapProjective(imageOrUri, points, x, y, regX, regY) {
             _super.call(this, imageOrUri, 0, 0, x, y, regX, regY);
             this.options = {
@@ -64,7 +45,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
         }
         BitmapProjective.prototype.setPoints = function (points) {
             if (points.length == 4) {
-                // calculate crossing vector points
                 var v2 = [];
                 for (var i = 0; i < points.length; i++) {
                     var v = new Vector2_1.default(points[i][0], points[i][1]);
@@ -88,7 +68,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
         };
         BitmapProjective.prototype.onLoad = function () {
             _super.prototype.onLoad.call(this);
-            // can be that onload
             if (this._points) {
                 var rect = this.getPointsRectangle(this._points);
                 this.cache(rect.x, rect.x, rect.width, rect.height);
@@ -108,7 +87,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 throw new Error('points is empty ');
                 return;
             }
-            // Get extents.
             var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
             for (var i = 0; i < points.length; i++) {
                 var point = points[i];
@@ -123,12 +101,11 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
             var points = this._points;
             if (points.length == 4) {
                 var rect = this.getPointsRectangle(points);
-                var width = rect.width; // maxX - minX;
-                var height = rect.height; // maxY - minY;
+                var width = rect.width;
+                var height = rect.height;
                 var imageWidth = this.image.width;
                 var imageHeight = this.image.height;
                 var transform = this.getProjectiveTransform(points);
-                // Begin subdivision process.
                 var ptl = transform.transformProjectiveVector([0, 0, 1]);
                 var ptr = transform.transformProjectiveVector([1, 0, 1]);
                 var pbl = transform.transformProjectiveVector([0, 1, 1]);
@@ -175,21 +152,15 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
             return transform;
         };
         BitmapProjective.prototype.divide = function (ctx, transform, width, height, u1, v1, u4, v4, p1, p2, p3, p4, limit) {
-            // See if we can still divide.
             if (limit) {
-                // Measure patch non-affinity.
                 var d1 = [p2[0] + p3[0] - 2 * p1[0], p2[1] + p3[1] - 2 * p1[1]];
                 var d2 = [p2[0] + p3[0] - 2 * p4[0], p2[1] + p3[1] - 2 * p4[1]];
                 var d3 = [d1[0] + d2[0], d1[1] + d2[1]];
                 var r = Math.abs((d3[0] * d3[0] + d3[1] * d3[1]) / (d1[0] * d2[0] + d1[1] * d2[1]));
-                // Measure patch area.
                 d1 = [p2[0] - p1[0] + p4[0] - p3[0], p2[1] - p1[1] + p4[1] - p3[1]];
                 d2 = [p3[0] - p1[0] + p4[0] - p2[0], p3[1] - p1[1] + p4[1] - p2[1]];
                 var area = Math.abs(d1[0] * d2[1] - d1[1] * d2[0]);
-                // Check area > patchSize pixels (note factor 4 due to not averaging d1 and d2)
-                // The non-affinity measure is used as a correction factor.
                 if ((u1 == 0 && u4 == 1) || ((.25 + r * 5) * area > (this.options.patchSize * this.options.patchSize))) {
-                    // Calculate subdivision points (middle, top, bottom, left, right).
                     var umid = (u1 + u4) / 2;
                     var vmid = (v1 + v4) / 2;
                     var pmid = transform.transformProjectiveVector([umid, vmid, 1]);
@@ -197,7 +168,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                     var pb = transform.transformProjectiveVector([umid, v4, 1]);
                     var pl = transform.transformProjectiveVector([u1, vmid, 1]);
                     var pr = transform.transformProjectiveVector([u4, vmid, 1]);
-                    // Subdivide.
                     limit--;
                     this.divide(ctx, transform, width, height, u1, v1, umid, vmid, p1, pt, pl, pmid, limit);
                     this.divide(ctx, transform, width, height, umid, v1, u4, vmid, pt, p2, pmid, pr, limit);
@@ -216,34 +186,27 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                     return;
                 }
             }
-            // Render this patch.
             ctx.save();
-            // Set clipping path.
             ctx.beginPath();
             ctx.moveTo(p1[0], p1[1]);
             ctx.lineTo(p2[0], p2[1]);
             ctx.lineTo(p4[0], p4[1]);
             ctx.lineTo(p3[0], p3[1]);
             ctx.closePath();
-            //ctx.clip();
-            // Get patch edge vectors.
             var d12 = [p2[0] - p1[0], p2[1] - p1[1]];
             var d24 = [p4[0] - p2[0], p4[1] - p2[1]];
             var d43 = [p3[0] - p4[0], p3[1] - p4[1]];
             var d31 = [p1[0] - p3[0], p1[1] - p3[1]];
-            // Find the corner that encloses the most area
             var a1 = Math.abs(d12[0] * d31[1] - d12[1] * d31[0]);
             var a2 = Math.abs(d24[0] * d12[1] - d24[1] * d12[0]);
             var a4 = Math.abs(d43[0] * d24[1] - d43[1] * d24[0]);
             var a3 = Math.abs(d31[0] * d43[1] - d31[1] * d43[0]);
             var amax = Math.max(Math.max(a1, a2), Math.max(a3, a4));
             var dx = 0, dy = 0, padx = 0, pady = 0;
-            // Align the transform along this corner.
             switch (amax) {
                 case a1:
                     {
                         ctx.transform(d12[0], d12[1], -d31[0], -d31[1], p1[0], p1[1]);
-                        // Calculate 1.05 pixel padding on vector basis.
                         if (u4 != 1)
                             padx = 1.05 / Math.sqrt(d12[0] * d12[0] + d12[1] * d12[1]);
                         if (v4 != 1)
@@ -253,7 +216,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 case a2:
                     {
                         ctx.transform(d12[0], d12[1], d24[0], d24[1], p2[0], p2[1]);
-                        // Calculate 1.05 pixel padding on vector basis.
                         if (u4 != 1)
                             padx = 1.05 / Math.sqrt(d12[0] * d12[0] + d12[1] * d12[1]);
                         if (v4 != 1)
@@ -264,7 +226,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 case a4:
                     {
                         ctx.transform(-d43[0], -d43[1], d24[0], d24[1], p4[0], p4[1]);
-                        // Calculate 1.05 pixel padding on vector basis.
                         if (u4 != 1)
                             padx = 1.05 / Math.sqrt(d43[0] * d43[0] + d43[1] * d43[1]);
                         if (v4 != 1)
@@ -275,7 +236,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                     }
                 case a3:
                     {
-                        // Calculate 1.05 pixel padding on vector basis.
                         ctx.transform(-d43[0], -d43[1], -d31[0], -d31[1], p3[0], p3[1]);
                         if (u4 != 1) {
                             padx = 1.05 / Math.sqrt(d43[0] * d43[0] + d43[1] * d43[1]);
@@ -287,7 +247,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                         break;
                     }
             }
-            // Calculate image padding to match.
             var du = (u4 - u1);
             var dv = (v4 - v1);
             var padu = padx * du;
@@ -295,11 +254,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
             ctx.drawImage(this.image, u1 * width, v1 * height, Math.min(u4 - u1 + padu, 1) * width, Math.min(v4 - v1 + padv, 1) * height, dx, dy, 1 + padx, 1 + pady);
             ctx.restore();
         };
-        /**
-         * Returns a string representation of this object.
-         * @method toString
-         * @return {String} a string representation of the instance.
-         **/
         BitmapProjective.prototype.toString = function () {
             return "[BitmapProjective (name=" + this.name + ")]";
         };
@@ -313,6 +267,7 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
         };
         return BitmapProjective;
     })(Bitmap_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = BitmapProjective;
     var Matrix = (function () {
         function Matrix(w, h, values) {
@@ -365,7 +320,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
         };
         Matrix.prototype.multiply = function (operand) {
             if (+operand !== operand) {
-                // Matrix mult
                 if (operand.h != this.w) {
                     throw "Matrix mult size mismatch";
                 }
@@ -382,7 +336,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 return new Matrix(operand.w, this.h, values);
             }
             else {
-                // Scalar mult
                 var values = Matrix.allocate(this.w, this.h);
                 for (var y = 0; y < this.h; ++y) {
                     for (var x = 0; x < this.w; ++x) {
@@ -397,15 +350,11 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 throw "Matrix rowEchelon size mismatch";
             }
             var temp = Matrix.cloneValues(this.values);
-            // Do Gauss-Jordan algorithm.
             for (var yp = 0; yp < this.h; ++yp) {
-                // Look up pivot value.
                 var pivot = temp[yp][yp];
                 while (pivot == 0) {
-                    // If pivot is zero, find non-zero pivot below.
                     for (var ys = yp + 1; ys < this.h; ++ys) {
                         if (temp[ys][yp] != 0) {
-                            // Swap rows.
                             var tmpRow = temp[ys];
                             temp[ys] = temp[yp];
                             temp[yp] = tmpRow;
@@ -413,7 +362,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                         }
                     }
                     if (ys == this.h) {
-                        // No suitable pivot found. Abort.
                         return new Matrix(this.w, this.h, temp);
                     }
                     else {
@@ -421,12 +369,10 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                     }
                 }
                 ;
-                // Normalize this row.
                 var scale = 1 / pivot;
                 for (var x = yp; x < this.w; ++x) {
                     temp[yp][x] *= scale;
                 }
-                // Subtract this row from all other rows (scaled).
                 for (var y = 0; y < this.h; ++y) {
                     if (y == yp)
                         continue;
@@ -444,7 +390,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
                 throw "Matrix invert size mismatch";
             }
             var tempArray = Matrix.allocate(this.w * 2, this.h);
-            // Initialize augmented matrix
             for (var y = 0; y < this.h; ++y) {
                 for (var x = 0; x < this.w; ++x) {
                     tempArray[y][x] = this.values[y][x];
@@ -453,7 +398,6 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
             }
             var tempMtx = new Matrix(this.w * 2, this.h, tempArray);
             tempMtx = tempMtx.rowEchelon();
-            // Extract right block matrix.
             var values = Matrix.allocate(this.w, this.h);
             for (var y = 0; y < this.w; ++y) {
                 for (var x = 0; x < this.w; ++x) {

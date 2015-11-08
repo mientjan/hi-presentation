@@ -24,11 +24,6 @@ define(["require", "exports", "./AbstractBehavior", "../geom/Size"], function (r
             this._resizeSignalConnection = this.owner.resizeSignal.connect(this.updateScale.bind(this));
             this.updateScale();
         };
-        /**
-         * Will override all AutoScaleBehavior settings and will just fill the entire parent container with scaling.
-         * @method alwaysFill
-         * @param value
-         */
         AutoScaleBehavior.prototype.setAwaysVisible = function (value) {
             this._alwaysVisible = value;
             return this;

@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], function (require, exports, MathUtil_1, AbstractMath3D_1) {
     var Vector3 = (function (_super) {
@@ -155,7 +154,7 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             // input: THREE.Matrix4 projection matrix
             var x = this.x, y = this.y, z = this.z;
             var e = m.elements;
-            var d = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]); // perspective divide
+            var d = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
             this.x = (e[0] * x + e[4] * y + e[8] * z + e[12]) * d;
             this.y = (e[1] * x + e[5] * y + e[9] * z + e[13]) * d;
             this.z = (e[2] * x + e[6] * y + e[10] * z + e[14]) * d;
@@ -169,12 +168,10 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             var qy = q.y;
             var qz = q.z;
             var qw = q.w;
-            // calculate quat * vector
             var ix = qw * x + qy * z - qz * y;
             var iy = qw * y + qz * x - qx * z;
             var iz = qw * z + qx * y - qy * x;
             var iw = -qx * x - qy * y - qz * z;
-            // calculate result * inverse quat
             this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
             this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
             this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
@@ -245,12 +242,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             }
             return this;
         };
-        /**
-         *
-         * @param {Vector3} min
-         * @param {Vector3} max
-         * @returns {Vector3}
-         */
         Vector3.prototype.clamp = function (min, max) {
             // This function assumes min < max, if this assumption isn't true it will not operate correctly
             if (this.x < min.x) {
@@ -368,19 +359,12 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             v1.copy(this).projectOnVector(planeNormal);
             return this.sub(v1);
         };
-        /**
-         * reflect incident vector off plane orthogonal to normal
-         * normal is assumed to have unit length
-         * @param normal
-         * @returns {Vector3}
-         */
         Vector3.prototype.reflect = function (normal) {
             var v1 = this.getVector3('_v1Reflect');
             return this.sub(v1.copy(normal).multiplyScalar(2 * this.dot(normal)));
         };
         Vector3.prototype.angleTo = function (v) {
             var theta = this.dot(v) / (this.length() * v.length());
-            // clamp, to handle numerical problems
             return Math.acos(MathUtil_1.default.clamp(theta, -1, 1));
         };
         Vector3.prototype.distanceTo = function (v) {
@@ -392,40 +376,6 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             var dz = this.z - v.z;
             return dx * dx + dy * dy + dz * dz;
         };
-        //	public setEulerFromRotationMatrix( m, order ) {
-        //
-        //		THREE.error( 'THREE.Vector3: .setEulerFromRotationMatrix() has been removed. Use Euler.setFromRotationMatrix() instead.' );
-        //
-        //	}
-        //
-        //	public setEulerFromQuaternion( q, order ) {
-        //
-        //		THREE.error( 'THREE.Vector3: .setEulerFromQuaternion() has been removed. Use Euler.setFromQuaternion() instead.' );
-        //
-        //	}
-        //
-        //	public getPositionFromMatrix( m ) {
-        //
-        //		THREE.warn( 'THREE.Vector3: .getPositionFromMatrix() has been renamed to .setFromMatrixPosition().' );
-        //
-        //		return this.setFromMatrixPosition( m );
-        //
-        //	}
-        //
-        //	public getScaleFromMatrix( m ) {
-        //
-        //		THREE.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
-        //
-        //		return this.setFromMatrixScale( m );
-        //	}
-        //
-        //	public getColumnFromMatrix( index, matrix ) {
-        //
-        //		THREE.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
-        //
-        //		return this.setFromMatrixColumn( index, matrix );
-        //
-        //	}
         Vector3.prototype.setFromMatrixPosition = function (m) {
             this.x = m.elements[12];
             this.y = m.elements[13];
@@ -469,20 +419,11 @@ define(["require", "exports", "../util/MathUtil", "./math3d/AbstractMath3D"], fu
             array[offset + 2] = this.z;
             return array;
         };
-        //	public fromAttribute(attribute, index, offset:number = 0):Vector3
-        //	{
-        //		index = index * attribute.itemSize + offset;
-        //
-        //		this.x = attribute.array[ index ];
-        //		this.y = attribute.array[ index + 1 ];
-        //		this.z = attribute.array[ index + 2 ];
-        //
-        //		return this;
-        //	}
         Vector3.prototype.clone = function () {
             return new Vector3(this.x, this.y, this.z);
         };
         return Vector3;
     })(AbstractMath3D_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Vector3;
 });

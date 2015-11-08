@@ -1,25 +1,11 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../display/Shape"], function (require, exports, Shape_1) {
-    /**
-     * @class BackgroundColor
-     */
     var RectangleColor = (function (_super) {
         __extends(RectangleColor, _super);
-        /**
-         *
-         * @param {string} color
-         * @param {string|number} width
-         * @param {string|number} height
-         * @param {string|number} x
-         * @param {string|number} y
-         * @param {string|number} regX
-         * @param {string|number} regY
-         */
         function RectangleColor(color, width, height, x, y, regX, regY) {
             if (color === void 0) { color = '#000000'; }
             if (width === void 0) { width = '100%'; }
@@ -51,5 +37,6 @@ define(["require", "exports", "../display/Shape"], function (require, exports, S
         };
         return RectangleColor;
     })(Shape_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = RectangleColor;
 });

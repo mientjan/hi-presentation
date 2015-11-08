@@ -1,14 +1,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./AbstractBehavior", "../display/DisplayObject"], function (require, exports, AbstractBehavior_1, DisplayObject_1) {
-    /**
-     * @method ButtonBehavior
-     * @author Mient-jan Stelling <mientjan.stelling@gmail.com>
-     */
     var ButtonBehavior = (function (_super) {
         __extends(ButtonBehavior, _super);
         function ButtonBehavior() {
@@ -17,10 +12,6 @@ define(["require", "exports", "./AbstractBehavior", "../display/DisplayObject"],
             this._onPointerOverInstance = null;
             this._onPointerOutInstance = null;
         }
-        /**
-         * @method initialize
-         * @param displayObject
-         */
         ButtonBehavior.prototype.initialize = function (displayObject) {
             _super.prototype.initialize.call(this, displayObject);
             this.owner.enableMouseInteraction();
@@ -56,5 +47,6 @@ define(["require", "exports", "./AbstractBehavior", "../display/DisplayObject"],
         };
         return ButtonBehavior;
     })(AbstractBehavior_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ButtonBehavior;
 });

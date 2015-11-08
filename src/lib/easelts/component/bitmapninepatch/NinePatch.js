@@ -1,13 +1,5 @@
 define(["require", "exports", "../../display/Bitmap", "../../geom/Rectangle", "./NinePatchCoordinates"], function (require, exports, Bitmap_1, Rectangle_1, NinePatchCoordinates_1) {
-    /**
-     *
-     */
     var NinePatch = (function () {
-        /**
-         *
-         * @param imageOrString
-         * @param rectangle
-         */
         function NinePatch(imageOrString, rectangle) {
             this.bitmap = new Bitmap_1.default(imageOrString);
             if (!(rectangle instanceof Rectangle_1.default)) {
@@ -17,12 +9,6 @@ define(["require", "exports", "../../display/Bitmap", "../../geom/Rectangle", ".
                 this.rectangle = rectangle;
             }
         }
-        /**
-         *
-         * @param width
-         * @param height
-         * @returns {NinePatchCoordinates}
-         */
         NinePatch.prototype.getCoordinates = function (width, height) {
             var image = this.bitmap.getImageSize();
             var iw = image.width;
@@ -47,5 +33,6 @@ define(["require", "exports", "../../display/Bitmap", "../../geom/Rectangle", ".
         };
         return NinePatch;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = NinePatch;
 });
