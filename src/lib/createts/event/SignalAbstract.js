@@ -13,19 +13,9 @@ define(["require", "exports", "./SignalConnection"], function (require, exports,
             this.connect = this.connectImpl;
             this._head = (listener != null) ? new SignalConnection_1.default(this, listener) : null;
         }
-        /**
-         *
-         * @returns {boolean}
-         */
         SignalAbstract.prototype.hasListeners = function () {
             return this._head != null;
         };
-        /**
-         *
-         * @param {Function} listener
-         * @param {boolean} prioritize
-         * @returns {SignalConnection}
-         */
         SignalAbstract.prototype.connectImpl = function (listener, prioritize) {
             if (prioritize === void 0) { prioritize = false; }
             var _g = this;
@@ -40,10 +30,6 @@ define(["require", "exports", "./SignalConnection"], function (require, exports,
             }
             return conn;
         };
-        /**
-         *
-         * @param {SignalConnection} conn
-         */
         SignalAbstract.prototype.disconnect = function (conn) {
             var _g = this;
             if (this.dispatching()) {
@@ -128,6 +114,5 @@ define(["require", "exports", "./SignalConnection"], function (require, exports,
         SignalAbstract.DISPATCHING_SENTINEL = new SignalConnection_1.default(null, null);
         return SignalAbstract;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SignalAbstract;
 });

@@ -7,6 +7,5 @@ define(["require", "exports"], function (require, exports) {
         HAlign.RIGHT = "right";
         return HAlign;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = HAlign;
 });

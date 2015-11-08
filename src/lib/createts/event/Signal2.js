@@ -1,24 +1,15 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "./SignalAbstract"], function (require, exports, SignalAbstract_1) {
-    /**
-     * @namespace createts.events
-     * @module createts
-     * @class Signal2
-     */
     var Signal2 = (function (_super) {
         __extends(Signal2, _super);
         function Signal2() {
             _super.apply(this, arguments);
         }
-        /**
-         * Emit the signal, notifying each connected listener.
-         *
-         * @method emit
-         */
         Signal2.prototype.emit = function (arg1, arg2) {
             var _this = this;
             if (this.dispatching()) {
@@ -42,6 +33,5 @@ define(["require", "exports", "./SignalAbstract"], function (require, exports, S
         };
         return Signal2;
     })(SignalAbstract_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Signal2;
 });

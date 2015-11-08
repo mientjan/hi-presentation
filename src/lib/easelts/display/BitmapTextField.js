@@ -28,7 +28,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "./Container", "./Shape", "./Graphics", "./bitmapfont/VAlign", "./bitmapfont/HAlign", "../filters/ColorFilter"], function (require, exports, Container_1, Shape_1, Graphics_1, VAlign_1, HAlign_1, ColorFilter_1) {
     function hexToR(h) {
@@ -132,6 +133,5 @@ define(["require", "exports", "./Container", "./Shape", "./Graphics", "./bitmapf
         BitmapTextField.bitmapFonts = [];
         return BitmapTextField;
     })(Container_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = BitmapTextField;
 });

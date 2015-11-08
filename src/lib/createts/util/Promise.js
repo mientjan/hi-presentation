@@ -1,16 +1,8 @@
 define(["require", "exports"], function (require, exports) {
-    // Use polyfill for setImmediate for performance gains
     var asap = (typeof setImmediate === 'function' && setImmediate) ||
         function (fn) {
             setTimeout(fn, 1);
         };
-    //
-    //// Polyfill for Function.prototype.bind
-    //function bind(fn, thisArg) {
-    //	return function() {
-    //		fn.apply(thisArg, arguments);
-    //	}
-    //}
     var isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === "[object Array]"; };
     function handle(deferred) {
         var me = this;
@@ -71,12 +63,6 @@ define(["require", "exports"], function (require, exports) {
         this.resolve = resolve;
         this.reject = reject;
     }
-    /**
-     * Take a potentially misbehaving resolver function and make sure
-     * onFulfilled and onRejected are only called once.
-     *
-     * Makes no guarantees about asynchrony.
-     */
     function doResolve(fn, onFulfilled, onRejected) {
         var done = false;
         try {
@@ -160,11 +146,6 @@ define(["require", "exports"], function (require, exports) {
                 }
             });
         };
-        /**
-         * Set the immediate function to execute callbacks
-         * @param fn {function} Function to execute
-         * @private
-         */
         Promise._setImmediateFn = function (fn) {
             asap = fn;
         };
@@ -179,6 +160,5 @@ define(["require", "exports"], function (require, exports) {
         };
         return Promise;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Promise;
 });

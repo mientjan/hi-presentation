@@ -1,17 +1,13 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "../display/DisplayObject"], function (require, exports, DisplayObject_1) {
     var now = (window.performance && window.performance.now) ? window.performance.now.bind(performance) : Date.now;
     var Stats = (function (_super) {
         __extends(Stats, _super);
-        //var msDiv = createPanel( 'ms', '#0f0', '#020' );
-        //var msText = msDiv.children[ 0 ];
-        //var msGraph = msDiv.children[ 1 ];
-        //
-        //container.appendChild( msDiv );
         function Stats(x, y, rx, ry) {
             if (x === void 0) { x = '100%'; }
             if (y === void 0) { y = 0; }
@@ -23,15 +19,9 @@ define(["require", "exports", "../display/DisplayObject"], function (require, ex
             this.prevTime = this.startTime;
             this.frames = 0;
             this.mode = 0;
-            // FPS
             this.fps = 0;
             this.fpsMin = Infinity;
             this.fpsMax = 0;
-            //var fpsDiv = createPanel( 'fps', '#0ff', '#002' );
-            //var fpsText = fpsDiv.children[ 0 ];
-            //var fpsGraph = fpsDiv.children[ 1 ];
-            //container.appendChild( fpsDiv );
-            // MS
             this.ms = 0;
             this.msMin = Infinity;
             this.msMax = 0;
@@ -67,30 +57,6 @@ define(["require", "exports", "../display/DisplayObject"], function (require, ex
             this.text = (this.ms | 0) + ' MS (' + (this.msMin | 0) + '-' + (this.msMax | 0) + ')';
             this.updateGraph(this.graph, this.ms / 200);
             this.frames++;
-            //if ( time > this.prevTime + 1000 ) {
-            //this.fps = Math.round( ( this.frames * 1000 ) / ( time - this.prevTime ) );
-            //this.fpsMin = Math.min( this.fpsMin, this.fps );
-            //this.fpsMax = Math.max( this.fpsMax, this.fps );
-            //fpsText.textContent = fps + ' FPS (' + fpsMin + '-' + fpsMax + ')';
-            //updateGraph( fpsGraph, fps / 100 );
-            //
-            //prevTime = time;
-            //frames = 0;
-            //
-            //if ( mem !== undefined ) {
-            //
-            //	var heapSize = performance.memory.usedJSHeapSize;
-            //	var heapSizeLimit = performance.memory.jsHeapSizeLimit;
-            //
-            //	mem = Math.round( heapSize * 0.000000954 );
-            //	memMin = Math.min( memMin, mem );
-            //	memMax = Math.max( memMax, mem );
-            //
-            //	memText.textContent = mem + ' MB (' + memMin + '-' + memMax + ')';
-            //	updateGraph( memGraph, heapSize / heapSizeLimit );
-            //
-            //}
-            //}
             return time;
         };
         Stats.prototype.update = function () {
@@ -98,6 +64,5 @@ define(["require", "exports", "../display/DisplayObject"], function (require, ex
         };
         return Stats;
     })(DisplayObject_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Stats;
 });

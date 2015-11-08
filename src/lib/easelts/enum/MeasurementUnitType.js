@@ -1,8 +1,4 @@
 define(["require", "exports"], function (require, exports) {
-    /**
-     * @enum MeasurementUnitType
-     * %|px|pt|in|cm|mm|vw|vh
-     */
     var MeasurementUnitType;
     (function (MeasurementUnitType) {
         MeasurementUnitType[MeasurementUnitType["PROCENT"] = 0] = "PROCENT";
@@ -14,6 +10,5 @@ define(["require", "exports"], function (require, exports) {
         MeasurementUnitType[MeasurementUnitType["VIEWPORT_WIDTH"] = 6] = "VIEWPORT_WIDTH";
         MeasurementUnitType[MeasurementUnitType["VIEWPORT_HEIGHT"] = 7] = "VIEWPORT_HEIGHT";
     })(MeasurementUnitType || (MeasurementUnitType = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = MeasurementUnitType;
 });

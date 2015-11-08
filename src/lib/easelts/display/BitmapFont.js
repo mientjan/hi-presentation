@@ -346,6 +346,5 @@ define(["require", "exports", "./SpriteSheet", "./Sprite", "./bitmapfont/BitmapC
         BitmapFont.CHAR_CARRIAGE_RETURN = 13;
         return BitmapFont;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = BitmapFont;
 });

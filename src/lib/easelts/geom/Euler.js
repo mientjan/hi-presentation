@@ -234,6 +234,5 @@ define(["require", "exports", "../util/MathUtil", "./Quaternion"], function (req
         Euler.DefaultOrder = 'XYZ';
         return Euler;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Euler;
 });

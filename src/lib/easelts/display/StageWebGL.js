@@ -28,7 +28,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "./Stage", "../data/StageOption", "../data/RGBA"], function (require, exports, Stage_1, StageOption_1, RGBA_1) {
     var StageWebGL = (function (_super) {
@@ -439,6 +440,5 @@ define(["require", "exports", "./Stage", "../data/StageOption", "../data/RGBA"],
         StageWebGL.MAX_BOXES_POINTS_INCREMENT = StageWebGL.MAX_INDEX_SIZE / 4;
         return StageWebGL;
     })(Stage_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StageWebGL;
 });

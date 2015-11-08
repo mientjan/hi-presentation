@@ -127,6 +127,5 @@ define(["require", "exports", '../../createts/util/HttpRequest', '../../createts
         };
         return FlumpLibrary;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpLibrary;
 });

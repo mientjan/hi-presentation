@@ -33,6 +33,5 @@ define(["require", "exports", "../../display/Bitmap", "../../geom/Rectangle", ".
         };
         return NinePatch;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = NinePatch;
 });

@@ -9,6 +9,5 @@ define(["require", "exports"], function (require, exports) {
         }
         return Texture;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Texture;
 });

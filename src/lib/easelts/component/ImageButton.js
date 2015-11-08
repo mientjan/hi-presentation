@@ -1,7 +1,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "../display/DisplayObject", "../behavior/ButtonBehavior"], function (require, exports, DisplayObject_1, ButtonBehavior_1) {
     var ImageButton = (function (_super) {
@@ -66,6 +67,5 @@ define(["require", "exports", "../display/DisplayObject", "../behavior/ButtonBeh
         ImageButton.EVENT_DISABLED = 'disabled';
         return ImageButton;
     })(DisplayObject_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ImageButton;
 });

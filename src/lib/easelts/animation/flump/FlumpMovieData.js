@@ -14,6 +14,5 @@ define(["require", "exports", './FlumpLayerData'], function (require, exports, F
         }
         return FlumpMovieData;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpMovieData;
 });

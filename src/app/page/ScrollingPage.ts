@@ -1,4 +1,4 @@
-import Stage from "../lib/easelts/display/Stage";
+import Stage from "../../lib/easelts/display/Stage";
 
 import AutoScaleBehavior from "../../lib/easelts/behavior/AutoScaleBehavior";
 import DisplayObject from "../../lib/easelts/display/DisplayObject";
@@ -12,6 +12,7 @@ import ButtonBehavior from "../../lib/easelts/behavior/ButtonBehavior";
 import RectangleColor from "../../lib/easelts/component/RectangleColor";
 import MathUtil from "../../lib/easelts/util/MathUtil";
 import SpriteSheet from "../../lib/easelts/display/SpriteSheet";
+import * as Functional from "../../lib/createts/util/Functional";
 
 class ScrollingPage extends Container<DisplayObject>
 {
@@ -19,7 +20,9 @@ class ScrollingPage extends Container<DisplayObject>
 	loader:Loader = new Loader('50%', '50%');
 	frames:number = 0;
 	scrollPower:number = .1;
+
 	framesPerBlock:number = 50;
+	offset:number = 0; //25;
 
 	constructor()
 	{
@@ -103,6 +106,7 @@ class ScrollingPage extends Container<DisplayObject>
 	}
 
 	public position:Point = new Point(0, 0);
+	public positionLock:Point = new Point(0, 0);
 	public positionTo:Point = new Point(0, 0);
 
 	public handleDragging(dx:number, dy:number, dragging:boolean)
@@ -113,24 +117,38 @@ class ScrollingPage extends Container<DisplayObject>
 		this.position.x = MathUtil.clamp(this.position.x, 0, this.frames - 1);
 		this.position.y = MathUtil.clamp(this.position.y, 0, this.frames - 1);
 
-		//var y = Math.ceil(this.position.y / this.framesPerBlock);
-		//this.position.y = (this.position.y % this.framesPerBlock) * y;
+		var y = Math.round(this.position.y / this.framesPerBlock);
+		this.positionLock.y = this.offset + (this.framesPerBlock * y);
+		
 	}
 
-	public onTick(delta)
+	public onTick(delta:number)
 	{
 		super.onTick(delta);
+		this.tick(delta);
+	}
+
+	public tick = Functional.throttle((delta) =>
+	{
+
 
 		if(this.sequence.isLoaded)
 		{
 			var framePerPosition = 2;
 
+			if(this.positionTo.y < (this.positionLock.y|0)){
 
-			this.positionTo.y = MathUtil.lerp(this.positionTo.y, this.position.y, 1);
-			this.sequence.gotoAndStop(this.positionTo.y|0);
+				this.positionTo.y++;
+			} else if(this.positionTo.y > (this.positionLock.y|0)){
+				this.positionTo.y--;
+			} else {
+
+			}
+			this.sequence.currentFrame = this.positionTo.y|0;
+			//console.log(this.positionTo.y);
 
 		}
-	}
+	}, 1000/24, this);
 }
 
 export default ScrollingPage;

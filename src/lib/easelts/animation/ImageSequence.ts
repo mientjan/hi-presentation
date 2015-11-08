@@ -9,6 +9,8 @@ import TimeEvent from "../../createts/event/TimeEvent";
 import Signal from "../../createts/event/Signal";
 import SignalConnection from "../../createts/event/SignalConnection";
 import Promise from "../../createts/util/Promise";
+import QueueList from "./QueueList";
+import Queue from "../data/Queue";
 
 /**
  * @class ImageSequence
@@ -17,21 +19,26 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 {
 	public type:DisplayType = DisplayType.BITMAP;
 
-	public _playing = false;
-	public _timeIndex:number = -1;
-	public currentFrame:number = 0;
-	public _frameTime:number = 0;
-	public _length:number = 0;
+	protected _queueList:QueueList = new QueueList();
 
-	private _times:number = 1;
-	private _loopInfinite:boolean = false;
-
-	private _onComplete:Function = null;
-
+	//public _playing = false;
+	//public _timeIndex:number = -1;
+	//public _length:number = 0;
+	//
+	//private _times:number = 1;
+	//private _loopInfinite:boolean = false;
+	//
+	//private _onComplete:Function = null;
+	//
+	public time:number = 0;
+	public timeDuration:number = 0;
+	public frames:number = 0;
 	public paused:boolean = true;
 	public fps:number;
 	public spriteSheet:SpriteSheet = null;
-
+	public frameTime:number = 0;
+	public currentFrame:number = 0;
+	//
 	public isLoaded:boolean = false;
 
 	/**
@@ -51,11 +58,6 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 		this.spriteSheet = spriteSheet;
 		this.fps = fps;
-
-		if(this.isLoaded)
-		{
-			this.parseLoad();
-		}
 	}
 
 	private parseLoad(){
@@ -67,9 +69,9 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 			throw new Error('SpriteSheet not compatible with ImageSequence, has multiple animations. Only supports one')
 		}
 
-		this._length = this.spriteSheet.getNumFrames(animations[0]);
-
-		this._frameTime = 1000 / this.fps;
+		this.frames = this.spriteSheet.getNumFrames();
+		this.frameTime = 1000 / this.fps;
+		this.timeDuration = this.frames * this.frameTime;
 	}
 
 	public load( onProgress?:(progress:number) => any):Promise<ImageSequence>
@@ -118,82 +120,117 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 		return true;
 	}
 
-	public play(times = 1, onComplete:Function = null):ImageSequence
+	public play(times:number = 1, label:string|Array<number> = null, complete?:() => any):ImageSequence
 	{
-		this.currentFrame = 0;
-		this._times = times;
-		this._loopInfinite = times == -1 ? true : false;
-		this._onComplete = onComplete;
-		this._playing = true;
-
-		return this;
-	}
-
-	public gotoAndStop(frame = 1):ImageSequence
-	{
-		this.currentFrame = frame;
-		this._times = 1;
-		this._loopInfinite = false;
-		this._playing = false;
-
-		return this;
-	}
-
-	public stop(triggerOnComplete:boolean = true):ImageSequence
-	{
-		this._playing = false;
-		this._loopInfinite = false;
-		this._timeIndex = -1;
-
-		if(this._onComplete && triggerOnComplete)
+		if(this.spriteSheet.isLoaded && !this.isLoaded)
 		{
-			this._onComplete.call(null);
+			this.isLoaded = true;
+			this.parseLoad();
 		}
 
-		this._onComplete = null;
+		this.visible = true;
+
+		if(label instanceof Array)
+		{
+			if(label.length == 1)
+			{
+				var queue = new Queue(null, label[0], this.getTotalFrames(), times, 0);
+			} else {
+				var queue = new Queue(null, label[0], label[1], times, 0);
+			}
+		} else if( label == null)
+		{
+			var queue = new Queue(null, 0, this.getTotalFrames(), times, 0);
+		}
+
+		if(complete)
+		{
+			queue.then(complete);
+		}
+
+		this._queueList.add(queue);
+
+		if(!this._queueList.current){
+			this._queueList.next();
+		}
+
+
+
+		this.paused = false;
 
 		return this;
+	}
+
+	public resume():ImageSequence
+	{
+		this.paused = false;
+		return this;
+	}
+
+	public pause():ImageSequence
+	{
+		this.paused = true;
+		return this;
+	}
+
+	public end(all:boolean = false):ImageSequence
+	{
+		this._queueList.end(all);
+		return this;
+	}
+
+	public stop():ImageSequence
+	{
+		this.paused = true;
+
+		this._queueList.kill();
+
+		return this;
+	}
+3
+	public next():Queue
+	{
+		this.time = this.time & this.frameTime;
+		return this._queueList.next();
 	}
 
 	public onTick(delta:number):void
 	{
-		var playing = this._playing;
+		super.onTick(delta);
 
-		if(playing)
+		if(this.paused == false)
 		{
-			if(this._timeIndex < 0)
-			{
-				this._timeIndex = 0;
-			}
+			this.time += delta;
 
-			var time = this._timeIndex += delta;
-			var frameTime = this._frameTime;
-			var length = this._length;
-			var times = this._times;
-			var frame = Math.floor(time / frameTime);
-			var currentFrame = this.currentFrame;
-			var playedLeft = times - Math.floor(frame / length);
+			var label = this._queueList.current;
+			var toFrame = this.currentFrame;
 
-			if(!this._loopInfinite && playedLeft <= 0)
+			if( label )
 			{
-				this.stop();
-			}
-			else
-			{
-				frame %= length;
+				toFrame = this.frames * this.time / this.timeDuration;
 
-				if(currentFrame != frame)
+				if( label.times != -1 )
 				{
-					this.currentFrame = frame;
+					if( label.times - Math.ceil(toFrame / (label.to - label.from)) < 0 )
+					{
+						if( !this.next() )
+						{
+							this.stop();
+							return;
+						}
+					}
 				}
+
+				toFrame = label.from + ( toFrame % (label.to - label.from) );
 			}
 
+			this.currentFrame = toFrame|0;
 		}
 	}
 
 	public getTotalFrames():number
 	{
-		return this._length;
+		return this.frames;
 	}
 
 }

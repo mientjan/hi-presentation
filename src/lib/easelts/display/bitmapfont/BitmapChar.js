@@ -43,6 +43,5 @@ define(["require", "exports"], function (require, exports) {
         };
         return BitmapChar;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = BitmapChar;
 });

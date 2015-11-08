@@ -1,9 +1,10 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
-define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", "../../lib/easelts/display/DisplayObject", "../../lib/easelts/geom/Point", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/behavior/ButtonBehavior", "../../lib/easelts/component/RectangleColor", "../../lib/easelts/util/MathUtil", "../../lib/easelts/display/SpriteSheet"], function (require, exports, AutoScaleBehavior_1, DisplayObject_1, Point_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, ButtonBehavior_1, RectangleColor_1, MathUtil_1, SpriteSheet_1) {
+define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", "../../lib/easelts/display/DisplayObject", "../../lib/easelts/geom/Point", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/behavior/ButtonBehavior", "../../lib/easelts/component/RectangleColor", "../../lib/easelts/util/MathUtil", "../../lib/easelts/display/SpriteSheet", "../../lib/createts/util/Functional"], function (require, exports, AutoScaleBehavior_1, DisplayObject_1, Point_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, ButtonBehavior_1, RectangleColor_1, MathUtil_1, SpriteSheet_1, Functional) {
     var ScrollingPage = (function (_super) {
         __extends(ScrollingPage, _super);
         function ScrollingPage() {
@@ -13,8 +14,24 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
             this.frames = 0;
             this.scrollPower = .1;
             this.framesPerBlock = 50;
+            this.offset = 0;
             this.position = new Point_1.default(0, 0);
+            this.positionLock = new Point_1.default(0, 0);
             this.positionTo = new Point_1.default(0, 0);
+            this.tick = Functional.throttle(function (delta) {
+                if (_this.sequence.isLoaded) {
+                    var framePerPosition = 2;
+                    if (_this.positionTo.y < (_this.positionLock.y | 0)) {
+                        _this.positionTo.y++;
+                    }
+                    else if (_this.positionTo.y > (_this.positionLock.y | 0)) {
+                        _this.positionTo.y--;
+                    }
+                    else {
+                    }
+                    _this.sequence.currentFrame = _this.positionTo.y | 0;
+                }
+            }, 1000 / 24, this);
             this.hitArea = new RectangleColor_1.default('#000', '100%', '100%');
             this.addChild(this.hitArea);
             this.hitArea.visible = false;
@@ -73,19 +90,14 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
             this.position.y += dy * this.scrollPower;
             this.position.x = MathUtil_1.default.clamp(this.position.x, 0, this.frames - 1);
             this.position.y = MathUtil_1.default.clamp(this.position.y, 0, this.frames - 1);
-            //var y = Math.ceil(this.position.y / this.framesPerBlock);
-            //this.position.y = (this.position.y % this.framesPerBlock) * y;
+            var y = Math.round(this.position.y / this.framesPerBlock);
+            this.positionLock.y = this.offset + (this.framesPerBlock * y);
         };
         ScrollingPage.prototype.onTick = function (delta) {
             _super.prototype.onTick.call(this, delta);
-            if (this.sequence.isLoaded) {
-                var framePerPosition = 2;
-                this.positionTo.y = MathUtil_1.default.lerp(this.positionTo.y, this.position.y, 1);
-                this.sequence.gotoAndStop(this.positionTo.y | 0);
-            }
+            this.tick(delta);
         };
         return ScrollingPage;
     })(Container_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ScrollingPage;
 });

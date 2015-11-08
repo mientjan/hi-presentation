@@ -1,7 +1,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", "../createts/event/EventDispatcher", "../tweents/Ease", "../createts/util/Interval"], function (require, exports, EventDispatcher_1, Ease_1, Interval_1) {
     var Tween = (function (_super) {
@@ -408,6 +409,5 @@ define(["require", "exports", "../createts/event/EventDispatcher", "../tweents/E
         };
         return Tween;
     })(EventDispatcher_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Tween;
 });

@@ -25,6 +25,5 @@ define(["require", "exports", "../Vector3", "../Quaternion", "../Matrix4"], func
         };
         return AbstractMath3D;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = AbstractMath3D;
 });

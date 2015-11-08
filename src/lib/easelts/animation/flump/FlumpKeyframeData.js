@@ -59,6 +59,5 @@ define(["require", "exports"], function (require, exports) {
         };
         return FlumpKeyframeData;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpKeyframeData;
 });

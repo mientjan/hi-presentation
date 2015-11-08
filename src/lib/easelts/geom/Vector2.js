@@ -295,6 +295,5 @@ define(["require", "exports"], function (require, exports) {
         Vector2.degreeToRad = Math.PI / 180;
         return Vector2;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Vector2;
 });

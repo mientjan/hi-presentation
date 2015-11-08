@@ -3,10 +3,10 @@ define(["require", "exports", "../lib/easelts/display/Stage", "../lib/easelts/ui
         function main() {
             this.stage = new Stage_1.default(document.body, { autoResize: true, autoClear: true });
             this.stage.enableMouseOver(50);
-            this.stage.setFps(24);
+            this.stage.setFps(60);
             this.stage.start();
             Touch_1.default.enable(this.stage);
-            this.keyDown();
+            this.scrollPage();
         }
         main.prototype.scrollPage = function () {
             var page = new ScrollingPage_1.default();
@@ -18,6 +18,5 @@ define(["require", "exports", "../lib/easelts/display/Stage", "../lib/easelts/ui
         };
         return main;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = main;
 });

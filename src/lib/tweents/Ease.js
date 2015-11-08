@@ -182,6 +182,5 @@ define(["require", "exports"], function (require, exports) {
         Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
         return Ease;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Ease;
 });

@@ -1,6 +1,6 @@
 class ListUtil
 {
-	public static createList(from:number, to:number, fn:(index:number) => string):string[]
+	public static createList(from:number, to:number, fn:(index:number) => any):any[]
 	{
 		var list = [];
 		for(var i = from; i < to; i++)

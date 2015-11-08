@@ -481,8 +481,8 @@ class SpriteSheet extends EventDispatcher implements ILoadable<SpriteSheet>
 					if(this.loadCount == 0)
 					{
 						this.isLoaded = true;
-						clearInterval(kill);
 						resolve(this);
+						clearInterval(kill);
 					}
 				});
 

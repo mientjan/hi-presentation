@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="$FileName$ $FileNameWithoutExtension$.css" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" value="Compiles .scss files into .css files" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="scss" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="SCSS" />
+    <option name="output" value="$FileNameWithoutExtension$.css" />
+    <option name="outputFilters">
+      <array />
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="C:/Users/mient-jan/AppData/Roaming/npm/node-sass.cmd" />
+    <option name="scopeName" value="Project Files" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileDir$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="postcss" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" value="" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="*" />
+    <option name="immediateSync" value="true" />
+    <option name="name" value="autoPrefixer" />
+    <option name="output" value="" />
+    <option name="outputFilters">
+      <array />
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="C:/Users/mient-jan/AppData/Roaming/npm/grunt.cmd" />
+    <option name="scopeName" value="src" />
+    <option name="trackOnlyRoot" value="false" />
+    <option name="workingDir" value="$ProjectFileDir$/tools/build" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--p $ProjectFileDir$\deploy\htdocs\version\src\inc\script" />
+    <option name="checkSyntaxErrors" value="false" />
+    <option name="description" value="Compiles .ts files into .js files" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="ts" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="TypeScript" />
+    <option name="output" value="$FileNameWithoutExtension$.js:$FileNameWithoutExtension$.js.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="tsc error format" />
+          <option name="name" value="tsc" />
+          <option name="regExp" value="$FILE_PATH$\($LINE$,$COLUMN$\): $MESSAGE$$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="C:/projects/google-zoo-jumeirah/tools/build/tsc.cmd" />
+    <option name="scopeName" value="Project Files" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileDir$" />
+    <envs />
+  </TaskOptions>
+</TaskOptions>
+

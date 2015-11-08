@@ -14,12 +14,12 @@ class main
 	constructor(){
 		this.stage = new Stage(<HTMLBlockElement> document.body, {autoResize:true, autoClear:true});
 		this.stage.enableMouseOver(50);
-		this.stage.setFps(24);
+		this.stage.setFps(60);
 		this.stage.start();
 		Touch.enable(this.stage);
 
 
-		this.keyDown();
+		this.scrollPage();
 	}
 
 	public scrollPage()

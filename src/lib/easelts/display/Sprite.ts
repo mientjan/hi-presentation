@@ -511,16 +511,18 @@ class Sprite extends DisplayObject
 	 * @param {Boolean} [frame] The frame of the animation to go to. Defaults to 0.
 	 * @protected
 	 **/
-	public _goto(frameOrAnimation?:any, frame?:any)
+	public _goto(frameOrAnimation?:string|number, frame?:any)
 	{
-		if(isNaN(frameOrAnimation))
+
+
+		if(typeof frameOrAnimation == 'string')
 		{
 			var data = this.spriteSheet.getAnimation(frameOrAnimation);
 			if(data)
 			{
 				this.currentAnimationFrame = frame || 0;
 				this._animation = data;
-				this.currentAnimation = frameOrAnimation;
+				this.currentAnimation = <string> frameOrAnimation;
 				this._normalizeFrame();
 			}
 		}
@@ -528,7 +530,7 @@ class Sprite extends DisplayObject
 		{
 			this.currentAnimationFrame = 0;
 			this.currentAnimation = this._animation = null;
-			this._currentFrame = frameOrAnimation;
+			this._currentFrame = <number> frameOrAnimation;
 			this._normalizeFrame();
 		}
 	}

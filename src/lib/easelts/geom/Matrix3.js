@@ -161,6 +161,5 @@ define(["require", "exports", "./Vector3"], function (require, exports, Vector3_
         };
         return Matrix3;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Matrix3;
 });

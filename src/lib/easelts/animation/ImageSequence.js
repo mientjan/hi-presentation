@@ -1,56 +1,39 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
-define(["require", "exports", "../display/DisplayObject", "../../createts/util/Promise"], function (require, exports, DisplayObject_1, Promise_1) {
-    /**
-     * @class ImageSequence
-     */
+define(["require", "exports", "../display/DisplayObject", "../../createts/util/Promise", "./QueueList", "../data/Queue"], function (require, exports, DisplayObject_1, Promise_1, QueueList_1, Queue_1) {
     var ImageSequence = (function (_super) {
         __extends(ImageSequence, _super);
-        /**
-         *
-         * @param {string[]} images
-         * @param {number} fps
-         * @param {string|number} width
-         * @param {string|number} height
-         * @param {string|number} x
-         * @param {string|number} y
-         * @param {string|number} regX
-         * @param {string|number} regY
-         */
         function ImageSequence(spriteSheet, fps, width, height, x, y, regX, regY) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (regX === void 0) { regX = 0; }
             if (regY === void 0) { regY = 0; }
             _super.call(this, width, height, x, y, regX, regY);
-            this.type = 8 /* BITMAP */;
-            this._playing = false;
-            this._timeIndex = -1;
-            this.currentFrame = 0;
-            this._frameTime = 0;
-            this._length = 0;
-            this._times = 1;
-            this._loopInfinite = false;
-            this._onComplete = null;
+            this.type = 8;
+            this._queueList = new QueueList_1.default();
+            this.time = 0;
+            this.timeDuration = 0;
+            this.frames = 0;
             this.paused = true;
             this.spriteSheet = null;
+            this.frameTime = 0;
+            this.currentFrame = 0;
             this.isLoaded = false;
             this.spriteSheet = spriteSheet;
             this.fps = fps;
-            if (this.isLoaded) {
-                this.parseLoad();
-            }
         }
         ImageSequence.prototype.parseLoad = function () {
             var animations = this.spriteSheet.getAnimations();
             if (animations.length > 1) {
                 throw new Error('SpriteSheet not compatible with ImageSequence, has multiple animations. Only supports one');
             }
-            this._length = this.spriteSheet.getNumFrames(animations[0]);
-            this._frameTime = 1000 / this.fps;
+            this.frames = this.spriteSheet.getNumFrames();
+            this.frameTime = 1000 / this.fps;
+            this.timeDuration = this.frames * this.frameTime;
         };
         ImageSequence.prototype.load = function (onProgress) {
             var _this = this;
@@ -85,64 +68,82 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             }
             return true;
         };
-        ImageSequence.prototype.play = function (times, onComplete) {
+        ImageSequence.prototype.play = function (times, label, complete) {
             if (times === void 0) { times = 1; }
-            if (onComplete === void 0) { onComplete = null; }
-            this.currentFrame = 0;
-            this._times = times;
-            this._loopInfinite = times == -1 ? true : false;
-            this._onComplete = onComplete;
-            this._playing = true;
-            return this;
-        };
-        ImageSequence.prototype.gotoAndStop = function (frame) {
-            if (frame === void 0) { frame = 1; }
-            this.currentFrame = frame;
-            this._times = 1;
-            this._loopInfinite = false;
-            this._playing = false;
-            return this;
-        };
-        ImageSequence.prototype.stop = function (triggerOnComplete) {
-            if (triggerOnComplete === void 0) { triggerOnComplete = true; }
-            this._playing = false;
-            this._loopInfinite = false;
-            this._timeIndex = -1;
-            if (this._onComplete && triggerOnComplete) {
-                this._onComplete.call(null);
+            if (label === void 0) { label = null; }
+            if (this.spriteSheet.isLoaded && !this.isLoaded) {
+                this.isLoaded = true;
+                this.parseLoad();
             }
-            this._onComplete = null;
-            return this;
-        };
-        ImageSequence.prototype.onTick = function (delta) {
-            var playing = this._playing;
-            if (playing) {
-                if (this._timeIndex < 0) {
-                    this._timeIndex = 0;
-                }
-                var time = this._timeIndex += delta;
-                var frameTime = this._frameTime;
-                var length = this._length;
-                var times = this._times;
-                var frame = Math.floor(time / frameTime);
-                var currentFrame = this.currentFrame;
-                var playedLeft = times - Math.floor(frame / length);
-                if (!this._loopInfinite && playedLeft <= 0) {
-                    this.stop();
+            this.visible = true;
+            if (label instanceof Array) {
+                if (label.length == 1) {
+                    var queue = new Queue_1.default(null, label[0], this.getTotalFrames(), times, 0);
                 }
                 else {
-                    frame %= length;
-                    if (currentFrame != frame) {
-                        this.currentFrame = frame;
-                    }
+                    var queue = new Queue_1.default(null, label[0], label[1], times, 0);
                 }
+            }
+            else if (label == null) {
+                var queue = new Queue_1.default(null, 0, this.getTotalFrames(), times, 0);
+            }
+            if (complete) {
+                queue.then(complete);
+            }
+            this._queueList.add(queue);
+            if (!this._queueList.current) {
+                this._queueList.next();
+            }
+            this.paused = false;
+            return this;
+        };
+        ImageSequence.prototype.resume = function () {
+            this.paused = false;
+            return this;
+        };
+        ImageSequence.prototype.pause = function () {
+            this.paused = true;
+            return this;
+        };
+        ImageSequence.prototype.end = function (all) {
+            if (all === void 0) { all = false; }
+            this._queueList.end(all);
+            return this;
+        };
+        ImageSequence.prototype.stop = function () {
+            this.paused = true;
+            this._queueList.kill();
+            return this;
+        };
+        ImageSequence.prototype.next = function () {
+            this.time = this.time & this.frameTime;
+            return this._queueList.next();
+        };
+        ImageSequence.prototype.onTick = function (delta) {
+            _super.prototype.onTick.call(this, delta);
+            if (this.paused == false) {
+                this.time += delta;
+                var label = this._queueList.current;
+                var toFrame = this.currentFrame;
+                if (label) {
+                    toFrame = this.frames * this.time / this.timeDuration;
+                    if (label.times != -1) {
+                        if (label.times - Math.ceil(toFrame / (label.to - label.from)) < 0) {
+                            if (!this.next()) {
+                                this.stop();
+                                return;
+                            }
+                        }
+                    }
+                    toFrame = label.from + (toFrame % (label.to - label.from));
+                }
+                this.currentFrame = toFrame | 0;
             }
         };
         ImageSequence.prototype.getTotalFrames = function () {
-            return this._length;
+            return this.frames;
         };
         return ImageSequence;
     })(DisplayObject_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ImageSequence;
 });
