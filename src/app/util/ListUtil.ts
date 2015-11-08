@@ -1,9 +1,9 @@
 class ListUtil
 {
-	public static createList(amount:number, fn:(index:number) => string):string[]
+	public static createList(from:number, to:number, fn:(index:number) => string):string[]
 	{
 		var list = [];
-		for(var i = 0; i < amount; i++)
+		for(var i = from; i < to; i++)
 		{
 			list.push(fn.call(this, i));
 		}

@@ -3,19 +3,33 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", "../display/DisplayObject", "../display/SpriteSheet", "../../createts/util/Promise"], function (require, exports, DisplayObject_1, SpriteSheet_1, Promise_1) {
+define(["require", "exports", "../display/DisplayObject", "../../createts/util/Promise"], function (require, exports, DisplayObject_1, Promise_1) {
+    /**
+     * @class ImageSequence
+     */
     var ImageSequence = (function (_super) {
         __extends(ImageSequence, _super);
+        /**
+         *
+         * @param {string[]} images
+         * @param {number} fps
+         * @param {string|number} width
+         * @param {string|number} height
+         * @param {string|number} x
+         * @param {string|number} y
+         * @param {string|number} regX
+         * @param {string|number} regY
+         */
         function ImageSequence(spriteSheet, fps, width, height, x, y, regX, regY) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (regX === void 0) { regX = 0; }
             if (regY === void 0) { regY = 0; }
             _super.call(this, width, height, x, y, regX, regY);
-            this.type = 8;
+            this.type = 8 /* BITMAP */;
             this._playing = false;
             this._timeIndex = -1;
-            this._frame = 0;
+            this.currentFrame = 0;
             this._frameTime = 0;
             this._length = 0;
             this._times = 1;
@@ -30,16 +44,6 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
                 this.parseLoad();
             }
         }
-        ImageSequence.createFromString = function (images, fps, width, height) {
-            var sequenceStructure = {
-                "images": images.map(function (src) { return src; }),
-                "frames": images.map(function (src, index) { return [0, 0, width, height, index, 0, 0]; }),
-                "animations": {
-                    "animation": [0, images.length - 1]
-                }
-            };
-            return new ImageSequence(new SpriteSheet_1.default(sequenceStructure), fps, width, height);
-        };
         ImageSequence.prototype.parseLoad = function () {
             var animations = this.spriteSheet.getAnimations();
             if (animations.length > 1) {
@@ -66,10 +70,10 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
             });
         };
         ImageSequence.prototype.draw = function (ctx, ignoreCache) {
-            var frame = this._frame;
+            var frame = this.currentFrame;
             var width = this.width;
             var height = this.height;
-            if (this._frame > -1 && this.isLoaded) {
+            if (this.currentFrame > -1 && this.isLoaded) {
                 var frameObject = this.spriteSheet.getFrame(frame);
                 if (!frameObject) {
                     return false;
@@ -84,7 +88,7 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
         ImageSequence.prototype.play = function (times, onComplete) {
             if (times === void 0) { times = 1; }
             if (onComplete === void 0) { onComplete = null; }
-            this._frame = 0;
+            this.currentFrame = 0;
             this._times = times;
             this._loopInfinite = times == -1 ? true : false;
             this._onComplete = onComplete;
@@ -93,7 +97,7 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
         };
         ImageSequence.prototype.gotoAndStop = function (frame) {
             if (frame === void 0) { frame = 1; }
-            this._frame = frame;
+            this.currentFrame = frame;
             this._times = 1;
             this._loopInfinite = false;
             this._playing = false;
@@ -121,7 +125,7 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
                 var length = this._length;
                 var times = this._times;
                 var frame = Math.floor(time / frameTime);
-                var currentFrame = this._frame;
+                var currentFrame = this.currentFrame;
                 var playedLeft = times - Math.floor(frame / length);
                 if (!this._loopInfinite && playedLeft <= 0) {
                     this.stop();
@@ -129,10 +133,13 @@ define(["require", "exports", "../display/DisplayObject", "../display/SpriteShee
                 else {
                     frame %= length;
                     if (currentFrame != frame) {
-                        this._frame = frame;
+                        this.currentFrame = frame;
                     }
                 }
             }
+        };
+        ImageSequence.prototype.getTotalFrames = function () {
+            return this._length;
         };
         return ImageSequence;
     })(DisplayObject_1.default);

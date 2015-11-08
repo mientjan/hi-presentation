@@ -2,9 +2,9 @@ define(["require", "exports"], function (require, exports) {
     var ListUtil = (function () {
         function ListUtil() {
         }
-        ListUtil.createList = function (amount, fn) {
+        ListUtil.createList = function (from, to, fn) {
             var list = [];
-            for (var i = 0; i < amount; i++) {
+            for (var i = from; i < to; i++) {
                 list.push(fn.call(this, i));
             }
             return list;

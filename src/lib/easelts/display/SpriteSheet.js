@@ -34,19 +34,98 @@ var __extends = (this && this.__extends) || function (d, b) {
 define(["require", "exports", "../../createts/event/EventDispatcher", "../../createts/util/Promise", "../../createts/util/HttpRequest", "../geom/Rectangle"], function (require, exports, EventDispatcher_1, Promise_1, HttpRequest_1, Rectangle_1) {
     var SpriteSheet = (function (_super) {
         __extends(SpriteSheet, _super);
+        /**
+         * @method constructor
+         * @param {Object} data An object describing the SpriteSheet data.
+         * @protected
+         **/
         function SpriteSheet(dataOrUrl) {
             _super.call(this);
+            /**
+             * Dispatched when all images are loaded.  Note that this only fires if the images
+             * were not fully loaded when the sprite sheet was initialized. You should check the complete property
+             * to prior to adding a listener. Ex.
+             * <pre><code>var sheet = new SpriteSheet(data);
+             * if (!sheet.complete) {
+             *  &nbsp; // not preloaded, listen for the complete event:
+             *  &nbsp; sheet.addEventListener("complete", handler);
+             * }</code></pre>
+             * @event complete
+             * @param {Object} target The object that dispatched the event.
+             * @param {String} type The event type.
+             * @since 0.6.0
+             */
+            // public properties:
+            /**
+             * Indicates whether all images are finished loading.
+             * @property complete
+             * @type Boolean
+             * @readonly
+             **/
             this.complete = true;
+            /**
+             * Specifies the framerate to use by default for Sprite instances using the SpriteSheet. See
+             * Sprite.framerate for more information.
+             * @property framerate
+             * @type Number
+             **/
             this.framerate = 0;
+            // private properties:
+            /**
+             * @property _animations
+             * @protected
+             * @type Array
+             **/
             this._animations = null;
+            /**
+             * @property _frames
+             * @protected
+             * @type Array
+             **/
             this._frames = null;
+            /**
+             * @property _images
+             * @protected
+             * @type Array
+             **/
             this._images = null;
+            /**
+             * @property _data
+             * @protected
+             * @type Object
+             **/
             this._data = null;
+            /**
+             * @property _loadCount
+             * @protected
+             * @type Number
+             **/
             this.loadCount = 0;
+            // only used for simple frame defs:
+            /**
+             * @property _frameHeight
+             * @protected
+             **/
             this._frameHeight = 0;
+            /**
+             * @property _frameWidth
+             * @protected
+             **/
             this._frameWidth = 0;
+            /**
+             * @property _numFrames
+             * @protected
+             **/
             this._numFrames = 0;
+            /**
+             * @property _regX
+             * @protected
+             **/
             this._regX = 0;
+            /**
+             * @property _regY
+             * @protected
+             **/
             this._regY = 0;
             this.isLoaded = false;
             this.url = null;
@@ -57,6 +136,26 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                 this.initialize(dataOrUrl);
             }
         }
+        SpriteSheet.getSequenceStructureByList = function (images, width, height) {
+            var sequenceStructure = {
+                "images": images.map(function (src) { return src; }),
+                "frames": images.map(function (src, index) { return [0, 0, width, height, index, 0, 0]; }),
+                "animations": {
+                    "animation": [0, images.length - 1]
+                }
+            };
+            return sequenceStructure;
+        };
+        SpriteSheet.createFromString = function (images, width, height) {
+            var sequenceStructure = {
+                "images": images.map(function (src) { return src; }),
+                "frames": images.map(function (src, index) { return [0, 0, width, height, index, 0, 0]; }),
+                "animations": {
+                    "animation": [0, images.length - 1]
+                }
+            };
+            return new SpriteSheet(sequenceStructure);
+        };
         SpriteSheet.load = function (url, spriteSheet, onProgress) {
             if (spriteSheet === void 0) { spriteSheet = new SpriteSheet(''); }
             var baseDir = url;
@@ -91,6 +190,7 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                 return;
             }
             this.framerate = data.framerate || 0;
+            // parse images:
             if (data.images && (l = data.images.length) > 0) {
                 a = this._images = [];
                 for (i = 0; i < l; i++) {
@@ -112,6 +212,7 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                     }
                 }
             }
+            // parse frames:
             if (data.frames == null) {
             }
             else if (data.frames instanceof Array) {
@@ -133,6 +234,7 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                     this._calculateFrames();
                 }
             }
+            // parse animations:
             this._animations = [];
             if ((o = data.animations) != null) {
                 this._data = {};
@@ -164,10 +266,10 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                     }
                     if (anim.next === true || anim.next === undefined) {
                         anim.next = name;
-                    }
+                    } // loop
                     if (anim.next === false || (a.length < 2 && anim.next == name)) {
                         anim.next = null;
-                    }
+                    } // stop
                     if (!anim.speed) {
                         anim.speed = 1;
                     }
@@ -207,6 +309,14 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                 throw new Error('could not load library');
             });
         };
+        // public methods:
+        /**
+         * Returns the total number of frames in the specified animation, or in the whole sprite
+         * sheet if the animation param is omitted.
+         * @method getNumFrames
+         * @param {String} animation The name of the animation to get a frame count for.
+         * @return {Number} The number of frames in the animation, or in the entire sprite sheet if the animation param is omitted.
+         */
         SpriteSheet.prototype.getNumFrames = function (animation) {
             var result = 0;
             if (animation == null) {
@@ -223,12 +333,40 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
             }
             return result;
         };
+        /**
+         * Returns an array of all available animation names as strings.
+         * @method getAnimations
+         * @return {Array} an array of animation names available on this sprite sheet.
+         **/
         SpriteSheet.prototype.getAnimations = function () {
             return this._animations.slice(0);
         };
+        /**
+         * Returns an object defining the specified animation. The returned object contains:<UL>
+         *     <LI>frames: an array of the frame ids in the animation</LI>
+         *     <LI>speed: the playback speed for this animation</LI>
+         *     <LI>name: the name of the animation</LI>
+         *     <LI>next: the default animation to play next. If the animation loops, the name and next property will be the
+         *     same.</LI>
+         * </UL>
+         * @method getAnimation
+         * @param {String} name The name of the animation to get.
+         * @return {Object} a generic object with frames, speed, name, and next properties.
+         **/
         SpriteSheet.prototype.getAnimation = function (name) {
             return this._data[name];
         };
+        /**
+         * Returns an object specifying the image and source rect of the specified frame. The returned object has:<UL>
+         *     <LI>an image property holding a reference to the image object in which the frame is found</LI>
+         *     <LI>a rect property containing a Rectangle instance which defines the boundaries for the frame within that
+         *     image.</LI>
+         *     <LI> A regX and regY property corresponding to the regX/Y values for the frame.
+         * </UL>
+         * @method getFrame
+         * @param {Number} frameIndex The index of the frame.
+         * @return {Object} a generic object with image and rect properties. Returns null if the frame does not exist.
+         **/
         SpriteSheet.prototype.getFrame = function (frameIndex) {
             var frame;
             if (this._frames && (frame = this._frames[frameIndex])) {
@@ -236,14 +374,36 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
             }
             return null;
         };
+        /**
+         * Returns a {{#crossLink "Rectangle"}}{{/crossLink}} instance defining the bounds of the specified frame relative
+         * to the origin. For example, a 90 x 70 frame with a regX of 50 and a regY of 40 would return:
+         *
+         *      [x=-50, y=-40, width=90, height=70]
+         *
+         * @method getFrameBounds
+         * @param {Number} frameIndex The index of the frame.
+         * @param {Rectangle} [rectangle] A Rectangle instance to copy the values into. By default a new instance is created.
+         * @return {Rectangle} A Rectangle instance. Returns null if the frame does not exist, or the image is not fully loaded.
+         **/
         SpriteSheet.prototype.getFrameBounds = function (frameIndex, rectangle) {
             var frame = this.getFrame(frameIndex);
             return frame ? (rectangle || new Rectangle_1.default(-frame.regX, -frame.regY, frame.rect.width, frame.rect.height)) : null;
         };
+        /**
+         * Returns a string representation of this object.
+         * @method toString
+         * @return {String} a string representation of the instance.
+         **/
         SpriteSheet.prototype.toString = function () {
             return "[SpriteSheet]";
         };
+        /**
+         * Returns a clone of the SpriteSheet instance.
+         * @method clone
+         * @return {SpriteSheet} a clone of the SpriteSheet instance.
+         **/
         SpriteSheet.prototype.clone = function () {
+            // TODO: there isn't really any reason to clone SpriteSheet instances, because they can be reused.
             var o = new SpriteSheet();
             o.complete = this.complete;
             o._animations = this._animations;
@@ -256,6 +416,11 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
             o.loadCount = this.loadCount;
             return o;
         };
+        // private methods:
+        /**
+         * @method _handleImageLoad
+         * @protected
+         **/
         SpriteSheet.prototype._handleImageLoad = function () {
             if (--this.loadCount == 0) {
                 this._calculateFrames();
@@ -263,15 +428,19 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
                 this.dispatchEvent("complete");
             }
         };
+        /**
+         * @method _calculateFrames
+         * @protected
+         **/
         SpriteSheet.prototype._calculateFrames = function () {
             if (this._frames || this._frameWidth == 0) {
                 return;
             }
             this._frames = [];
-            var maxFrames = this._numFrames || 100000;
+            var maxFrames = this._numFrames || 100000; // if we go over this, something is wrong.
             var frameCount = 0, frameWidth = this._frameWidth, frameHeight = this._frameHeight;
-            var spacing = 0;
-            var margin = 0;
+            var spacing = 0; //this._spacing
+            var margin = 0; //this._margin;
             imgLoop: for (var i = 0, imgs = this._images; i < imgs.length; i++) {
                 var img = imgs[i], imgW = img.width, imgH = img.height;
                 var y = margin;

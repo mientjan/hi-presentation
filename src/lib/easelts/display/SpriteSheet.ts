@@ -138,6 +138,36 @@ import ILoadable from "../interface/ILoadable";
 
 class SpriteSheet extends EventDispatcher implements ILoadable<SpriteSheet>
 {
+	public static getSequenceStructureByList(images:string[], width:number, height:number):any
+	{
+		var sequenceStructure = {
+
+			"images": images.map(src => src),
+			"frames": images.map((src, index) => [0, 0, width, height, index, 0, 0]),
+			"animations": {
+				"animation": [0, images.length - 1]
+			}
+
+		};
+
+		return sequenceStructure;
+	}
+
+	public static createFromString(images:string[], width:number, height:number):SpriteSheet
+	{
+		var sequenceStructure = {
+
+			"images": images.map(src => src),
+			"frames": images.map((src, index) => [0, 0, width, height, index, 0, 0]),
+			"animations": {
+				"animation": [0, images.length - 1]
+			}
+
+		};
+
+		return new SpriteSheet(sequenceStructure);
+	}
+
 	public static load(url:string, spriteSheet:SpriteSheet = new SpriteSheet(''), onProgress?:(process:number) => any ):Promise<SpriteSheet>
 	{
 		var baseDir = url;

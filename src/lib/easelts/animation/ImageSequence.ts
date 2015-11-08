@@ -15,27 +15,11 @@ import Promise from "../../createts/util/Promise";
  */
 class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, IPlayable
 {
-
-	public static createFromString(images:string[], fps:number, width:number, height:number):ImageSequence
-	{
-		var sequenceStructure = {
-
-			"images": images.map(src => src),
-			"frames": images.map((src, index) => [0, 0, width, height, index, 0, 0]),
-			"animations": {
-				"animation": [0, images.length - 1]
-			}
-
-		};
-
-		return new ImageSequence(new SpriteSheet(sequenceStructure), fps, width, height);
-	}
-
 	public type:DisplayType = DisplayType.BITMAP;
 
 	public _playing = false;
 	public _timeIndex:number = -1;
-	public _frame:number = 0;
+	public currentFrame:number = 0;
 	public _frameTime:number = 0;
 	public _length:number = 0;
 
@@ -110,11 +94,11 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 	public draw(ctx:CanvasRenderingContext2D, ignoreCache:boolean):boolean
 	{
-		var frame = this._frame;
+		var frame = this.currentFrame;
 		var width = this.width;
 		var height = this.height;
 
-		if( this._frame > -1 && this.isLoaded )
+		if( this.currentFrame > -1 && this.isLoaded )
 		{
 			var frameObject = this.spriteSheet.getFrame(frame);
 
@@ -136,7 +120,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 	public play(times = 1, onComplete:Function = null):ImageSequence
 	{
-		this._frame = 0;
+		this.currentFrame = 0;
 		this._times = times;
 		this._loopInfinite = times == -1 ? true : false;
 		this._onComplete = onComplete;
@@ -147,7 +131,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 	public gotoAndStop(frame = 1):ImageSequence
 	{
-		this._frame = frame;
+		this.currentFrame = frame;
 		this._times = 1;
 		this._loopInfinite = false;
 		this._playing = false;
@@ -187,7 +171,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 			var length = this._length;
 			var times = this._times;
 			var frame = Math.floor(time / frameTime);
-			var currentFrame = this._frame;
+			var currentFrame = this.currentFrame;
 			var playedLeft = times - Math.floor(frame / length);
 
 			if(!this._loopInfinite && playedLeft <= 0)
@@ -200,11 +184,16 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 				if(currentFrame != frame)
 				{
-					this._frame = frame;
+					this.currentFrame = frame;
 				}
 			}
 
 		}
+	}
+
+	public getTotalFrames():number
+	{
+		return this._length;
 	}
 
 }
