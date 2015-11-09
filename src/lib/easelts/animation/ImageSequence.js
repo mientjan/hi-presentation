@@ -1,10 +1,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", "../display/DisplayObject", "../../createts/util/Promise", "./QueueList", "../data/Queue"], function (require, exports, DisplayObject_1, Promise_1, QueueList_1, Queue_1) {
+define(["require", "exports", "../display/DisplayObject", "../../createts/util/Promise", "../data/AnimationQueue", "../data/Queue"], function (require, exports, DisplayObject_1, Promise_1, AnimationQueue_1, Queue_1) {
     var ImageSequence = (function (_super) {
         __extends(ImageSequence, _super);
         function ImageSequence(spriteSheet, fps, width, height, x, y, regX, regY) {
@@ -14,7 +13,6 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             if (regY === void 0) { regY = 0; }
             _super.call(this, width, height, x, y, regX, regY);
             this.type = 8;
-            this._queueList = new QueueList_1.default();
             this.time = 0;
             this.timeDuration = 0;
             this.frames = 0;
@@ -25,6 +23,7 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             this.isLoaded = false;
             this.spriteSheet = spriteSheet;
             this.fps = fps;
+            this._queue = new AnimationQueue_1.default(fps);
         }
         ImageSequence.prototype.parseLoad = function () {
             var animations = this.spriteSheet.getAnimations();
@@ -90,10 +89,7 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             if (complete) {
                 queue.then(complete);
             }
-            this._queueList.add(queue);
-            if (!this._queueList.current) {
-                this._queueList.next();
-            }
+            this._queue.add(queue);
             this.paused = false;
             return this;
         };
@@ -107,37 +103,22 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
         };
         ImageSequence.prototype.end = function (all) {
             if (all === void 0) { all = false; }
-            this._queueList.end(all);
+            this._queue.end(all);
             return this;
         };
         ImageSequence.prototype.stop = function () {
             this.paused = true;
-            this._queueList.kill();
+            this._queue.kill();
             return this;
         };
         ImageSequence.prototype.next = function () {
-            this.time = this.time & this.frameTime;
-            return this._queueList.next();
+            return this._queue.next();
         };
         ImageSequence.prototype.onTick = function (delta) {
             _super.prototype.onTick.call(this, delta);
             if (this.paused == false) {
-                this.time += delta;
-                var label = this._queueList.current;
-                var toFrame = this.currentFrame;
-                if (label) {
-                    toFrame = this.frames * this.time / this.timeDuration;
-                    if (label.times != -1) {
-                        if (label.times - Math.ceil(toFrame / (label.to - label.from)) < 0) {
-                            if (!this.next()) {
-                                this.stop();
-                                return;
-                            }
-                        }
-                    }
-                    toFrame = label.from + (toFrame % (label.to - label.from));
-                }
-                this.currentFrame = toFrame | 0;
+                this._queue.onTick(delta);
+                this.currentFrame = this._queue.getFrame();
             }
         };
         ImageSequence.prototype.getTotalFrames = function () {
@@ -145,5 +126,6 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
         };
         return ImageSequence;
     })(DisplayObject_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ImageSequence;
 });

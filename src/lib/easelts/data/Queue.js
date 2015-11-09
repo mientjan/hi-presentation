@@ -3,9 +3,14 @@ define(["require", "exports"], function (require, exports) {
         function Queue(label, from, to, times, delay) {
             if (times === void 0) { times = 1; }
             if (delay === void 0) { delay = 0; }
+            this._complete = null;
+            if (from > to) {
+                throw new Error('argument "from" cannot be bigger than argument "to"');
+            }
             this.label = label;
             this.from = from;
             this.to = to;
+            this.duration = to - from;
             this.times = times;
             this.delay = delay;
         }
@@ -25,5 +30,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return Queue;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Queue;
 });

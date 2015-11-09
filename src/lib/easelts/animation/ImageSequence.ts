@@ -9,7 +9,7 @@ import TimeEvent from "../../createts/event/TimeEvent";
 import Signal from "../../createts/event/Signal";
 import SignalConnection from "../../createts/event/SignalConnection";
 import Promise from "../../createts/util/Promise";
-import QueueList from "./QueueList";
+import AnimationQueue from "../data/AnimationQueue";
 import Queue from "../data/Queue";
 
 /**
@@ -19,7 +19,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 {
 	public type:DisplayType = DisplayType.BITMAP;
 
-	protected _queueList:QueueList = new QueueList();
+	protected _queue:AnimationQueue;
 
 	//public _playing = false;
 	//public _timeIndex:number = -1;
@@ -58,6 +58,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 		this.spriteSheet = spriteSheet;
 		this.fps = fps;
+		this._queue = new AnimationQueue(fps);
 	}
 
 	private parseLoad(){
@@ -148,13 +149,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 			queue.then(complete);
 		}
 
-		this._queueList.add(queue);
-
-		if(!this._queueList.current){
-			this._queueList.next();
-		}
-
-
+		this._queue.add(queue);
 
 		this.paused = false;
 
@@ -175,7 +170,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 	public end(all:boolean = false):ImageSequence
 	{
-		this._queueList.end(all);
+		this._queue.end(all);
 		return this;
 	}
 
@@ -183,15 +178,14 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 	{
 		this.paused = true;
 
-		this._queueList.kill();
+		this._queue.kill();
 
 		return this;
 	}
 3
 	public next():Queue
 	{
-		this.time = this.time & this.frameTime;
-		return this._queueList.next();
+		return this._queue.next();
 	}
 
 	public onTick(delta:number):void
@@ -200,31 +194,8 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 		if(this.paused == false)
 		{
-			this.time += delta;
-
-			var label = this._queueList.current;
-			var toFrame = this.currentFrame;
-
-			if( label )
-			{
-				toFrame = this.frames * this.time / this.timeDuration;
-
-				if( label.times != -1 )
-				{
-					if( label.times - Math.ceil(toFrame / (label.to - label.from)) < 0 )
-					{
-						if( !this.next() )
-						{
-							this.stop();
-							return;
-						}
-					}
-				}
-
-				toFrame = label.from + ( toFrame % (label.to - label.from) );
-			}
-
-			this.currentFrame = toFrame|0;
+			this._queue.onTick(delta);
+			this.currentFrame = this._queue.getFrame();
 		}
 	}
 
