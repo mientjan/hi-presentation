@@ -132,5 +132,6 @@ define(["require", "exports"], function (require, exports) {
         })();
         return Animate;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Animate;
 });

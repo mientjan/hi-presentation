@@ -29,5 +29,6 @@ define(["require", "exports", './FlumpTextureGroupAtlas', '../../../createts/uti
         };
         return FlumpTextureGroup;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FlumpTextureGroup;
 });

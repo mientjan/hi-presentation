@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/behavior/ButtonBehavior", "../../lib/easelts/component/RectangleColor", "../../lib/keys/KeyCode", "../../lib/easelts/display/SpriteSheet"], function (require, exports, AutoScaleBehavior_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, ButtonBehavior_1, RectangleColor_1, KeyCode_1, SpriteSheet_1) {
     var KeydownPage = (function (_super) {
@@ -23,7 +22,12 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
             }), 1280, 720);
             var frames = 50;
             for (var i = 0; i < 10; i++) {
-                this.keycode[KeyCode_1.default['NUM_' + i]] = [frames * i, frames * (i + 1) - 1];
+                if (i == 9) {
+                    this.keycode[KeyCode_1.default['NUM_' + i]] = [frames * i, frames * (i + 1) - 2];
+                }
+                else {
+                    this.keycode[KeyCode_1.default['NUM_' + i]] = [frames * i, frames * (i + 1)];
+                }
             }
             this.spriteSheet = new SpriteSheet_1.default(data);
             this.sequence = new ImageSequence_1.default(this.spriteSheet, 24, 1280, 720);
@@ -49,5 +53,6 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
         };
         return KeydownPage;
     })(Container_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = KeydownPage;
 });

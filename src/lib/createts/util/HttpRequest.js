@@ -85,5 +85,6 @@ define(["require", "exports", "./Promise"], function (require, exports, Promise_
         };
         return HttpRequest;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = HttpRequest;
 });

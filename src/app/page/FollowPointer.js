@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", "../../lib/easelts/display/DisplayObject", "../../lib/easelts/geom/Point", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/behavior/ButtonBehavior", "../../lib/easelts/component/RectangleColor", "../../lib/easelts/util/MathUtil", "../../lib/easelts/display/SpriteSheet", "../../lib/createts/util/Functional"], function (require, exports, AutoScaleBehavior_1, DisplayObject_1, Point_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, ButtonBehavior_1, RectangleColor_1, MathUtil_1, SpriteSheet_1, Functional) {
+define(["require", "exports", "../../lib/easelts/geom/Point", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/component/RectangleColor", "../../lib/easelts/util/MathUtil", "../../lib/easelts/display/SpriteSheet", "../../lib/easelts/display/Bitmap"], function (require, exports, Point_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, RectangleColor_1, MathUtil_1, SpriteSheet_1, Bitmap_1) {
     var FollowPointer = (function (_super) {
         __extends(FollowPointer, _super);
         function FollowPointer() {
@@ -14,87 +14,74 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
             this.scrollPower = .1;
             this.framesPerBlock = 50;
             this.offset = 0;
+            this.buffer = document.createElement('canvas');
             this.position = new Point_1.default(0, 0);
-            this.positionLock = new Point_1.default(0, 0);
             this.positionTo = new Point_1.default(0, 0);
-            this.tick = Functional.throttle(function (delta) {
-                if (_this.sequence.isLoaded) {
-                    var framePerPosition = 2;
-                    if (_this.positionTo.y < (_this.positionLock.y | 0)) {
-                        _this.positionTo.y++;
-                    }
-                    else if (_this.positionTo.y > (_this.positionLock.y | 0)) {
-                        _this.positionTo.y--;
-                    }
-                    else {
-                    }
-                    _this.sequence.currentFrame = _this.positionTo.y | 0;
-                }
-            }, 1000 / 24, this);
+            this.buffer.width = 100;
+            this.buffer.height = 100;
+            var bitmap = new Bitmap_1.default(this.buffer, '100%', '100%');
             this.hitArea = new RectangleColor_1.default('#000', '100%', '100%');
             this.addChild(this.hitArea);
-            this.hitArea.visible = false;
-            this.sequence = new ImageSequence_1.default(SpriteSheet_1.default.createFromString(ListUtil_1.default.createList(0, 499, function (index) {
-                return 'data/sequence/piday/image/sequence/' + ListUtil_1.default.padLeft('' + index, 4, '0') + '.png';
-            }), 1280, 720), 24, 1280, 720);
+            this.hitArea.compositeOperation = FollowPointer.COMPOSITE_OPERATION_DARKER;
+            this.sequence = new ImageSequence_1.default(SpriteSheet_1.default.createFromString(ListUtil_1.default.createList(0, 96, function (index) {
+                return 'data/sequence/piday/image/preloader/preloader_' + ListUtil_1.default.padLeft('' + index, 2, '0') + '.png';
+            }), 200, 200), 24, 200, 200);
+            this.addChild(bitmap);
             this.addChild(this.sequence);
             this.addChild(this.loader);
             this.sequence.load(this.loader.setProgress.bind(this.loader)).then(function () {
                 _this.loader.visible = false;
                 _this.frames = _this.sequence.getTotalFrames();
+                _this.sequence.play(-1);
             });
             this.sequence.alpha = 1;
-            this.sequence.setGeomTransform(1280, 720, '50%', '50%', '50%', '50%');
-            this.sequence.addBehavior(new AutoScaleBehavior_1.default().setAlwaysCover(true));
+            this.sequence.setGeomTransform(200, 200, '50%', '50%', '50%', '50%');
             this.enableMouseInteraction();
-            this.addBehavior(new ButtonBehavior_1.default());
             this.bindEvents();
         }
-        FollowPointer.prototype.bindEvents = function () {
+        FollowPointer.prototype.draw = function (ctx, ignore) {
+            var canvas = ctx.canvas;
+            var x = 0, y = 0, w = this.width * 1.05, h = this.height * 1.05;
+            x = (this.width - w) / 2;
+            y = (this.height - h) / 2;
+            var bctx = this.buffer.getContext('2d');
+            bctx.globalAlpha = .1;
+            bctx.fillRect(0, 0, this.width, this.height);
+            bctx.globalAlpha = .5;
+            bctx.drawImage(canvas, 0, 0, this.width, this.height, x, y, w, h);
+            ctx.drawImage(this.buffer, 0, 0, this.width, this.height);
+            if (_super.prototype.draw.call(this, ctx, ignore)) {
+                return true;
+            }
+        };
+        FollowPointer.prototype.setStage = function (stage) {
             var _this = this;
+            _super.prototype.setStage.call(this, stage);
+            stage.addEventListener('stagemousemove', function (e) {
+                if (e.nativeEvent) {
+                }
+                _this.position.x = e.getLocalX();
+                _this.position.y = e.getLocalY();
+                console.log(_this.position);
+            });
+        };
+        FollowPointer.prototype.bindEvents = function () {
             var first = null;
             var dragging = false;
             var dx = 0;
             var dy = 0;
-            this.addEventListener(DisplayObject_1.default.EVENT_MOUSE_DOWN, function (e) {
-                if (e.nativeEvent) {
-                    e.nativeEvent.stopPropagation();
-                }
-                dragging = true;
-            });
-            this.addEventListener(DisplayObject_1.default.EVENT_PRESS_MOVE, function (e) {
-                if (e.nativeEvent) {
-                    e.nativeEvent.stopPropagation();
-                }
-                var x = e.stageX;
-                var y = e.stageY;
-                if (!first) {
-                    first = new Point_1.default(x, y);
-                }
-                else {
-                    dx = x - first.x;
-                    dy = y - first.y;
-                    _this.handleDragging(dx, dy, dragging);
-                    first.x = x;
-                    first.y = y;
-                }
-            });
-            this.addEventListener(DisplayObject_1.default.EVENT_PRESS_UP, function (e) {
-                dragging = false;
-                first = null;
-            });
-        };
-        FollowPointer.prototype.handleDragging = function (dx, dy, dragging) {
-            this.position.x += dx * this.scrollPower;
-            this.position.y += dy * this.scrollPower;
-            this.position.x = MathUtil_1.default.clamp(this.position.x, 0, this.frames - 1);
-            this.position.y = MathUtil_1.default.clamp(this.position.y, 0, this.frames - 1);
-            var y = Math.round(this.position.y / this.framesPerBlock);
-            this.positionLock.y = this.offset + (this.framesPerBlock * y);
         };
         FollowPointer.prototype.onTick = function (delta) {
             _super.prototype.onTick.call(this, delta);
-            this.tick(delta);
+            var x = (this.width / 2);
+            var y = (this.height / 2);
+            MathUtil_1.default.lerpVector2(this.sequence, this.position, .1);
+            this.sequence.rotation = Math.atan2(this.sequence.x, this.sequence.y) * 360;
+        };
+        FollowPointer.prototype.onResize = function (w, h) {
+            _super.prototype.onResize.call(this, w, h);
+            this.buffer.width = w;
+            this.buffer.height = h;
         };
         return FollowPointer;
     })(Container_1.default);

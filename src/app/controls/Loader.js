@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../../lib/easelts/display/Shape", "../../lib/easelts/display/Container", "../../lib/easelts/display/Text"], function (require, exports, Shape_1, Container_1, Text_1) {
     var Loader = (function (_super) {
@@ -23,5 +22,6 @@ define(["require", "exports", "../../lib/easelts/display/Shape", "../../lib/ease
         };
         return Loader;
     })(Container_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Loader;
 });

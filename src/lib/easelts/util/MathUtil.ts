@@ -146,6 +146,12 @@ class MathUtil
 		return fromValue;
 	}
 
+	public static lerpVector2(fromValue:IVector2, toValue:IVector2, alpha:number):void
+	{
+		fromValue.x += ( toValue.x - fromValue.x ) * alpha;
+		fromValue.y += ( toValue.y - fromValue.y ) * alpha;
+	}
+
 	/**
 	 *    Random float from <0, 1> with 16 bits of randomness
 	 *    (standard Math.random() creates repetitive patterns when applied over larger space)

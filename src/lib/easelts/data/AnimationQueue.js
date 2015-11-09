@@ -20,8 +20,8 @@ define(["require", "exports", "./QueueList"], function (require, exports, QueueL
                 var from = this.current.from;
                 var to = this.current.to;
                 var duration = this.current.duration;
-                var frame = duration * this._time / (duration * this._fpms);
-                this.frame = frame;
+                var frame = (duration * this._time / (duration * this._fpms));
+                this.frame = from + (frame % duration);
                 if (times > -1 && times - (frame / duration) < 0) {
                     this.next();
                 }

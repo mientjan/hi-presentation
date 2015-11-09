@@ -399,5 +399,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return Vector4;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Vector4;
 });

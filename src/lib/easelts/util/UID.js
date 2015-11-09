@@ -35,5 +35,6 @@ define(["require", "exports"], function (require, exports) {
         UID._nextID = 0;
         return UID;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = UID;
 });

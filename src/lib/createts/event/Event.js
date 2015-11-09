@@ -74,5 +74,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return Event;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Event;
 });

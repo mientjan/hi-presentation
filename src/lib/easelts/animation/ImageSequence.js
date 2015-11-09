@@ -13,16 +13,13 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             if (regY === void 0) { regY = 0; }
             _super.call(this, width, height, x, y, regX, regY);
             this.type = 8;
-            this.time = 0;
-            this.timeDuration = 0;
-            this.frames = 0;
-            this.paused = true;
             this.spriteSheet = null;
-            this.frameTime = 0;
-            this.currentFrame = 0;
+            this.frames = 0;
+            this.frame = 0;
+            this.paused = true;
             this.isLoaded = false;
             this.spriteSheet = spriteSheet;
-            this.fps = fps;
+            this._fps = fps;
             this._queue = new AnimationQueue_1.default(fps);
         }
         ImageSequence.prototype.parseLoad = function () {
@@ -31,8 +28,6 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
                 throw new Error('SpriteSheet not compatible with ImageSequence, has multiple animations. Only supports one');
             }
             this.frames = this.spriteSheet.getNumFrames();
-            this.frameTime = 1000 / this.fps;
-            this.timeDuration = this.frames * this.frameTime;
         };
         ImageSequence.prototype.load = function (onProgress) {
             var _this = this;
@@ -52,10 +47,10 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             });
         };
         ImageSequence.prototype.draw = function (ctx, ignoreCache) {
-            var frame = this.currentFrame;
+            var frame = this.frame;
             var width = this.width;
             var height = this.height;
-            if (this.currentFrame > -1 && this.isLoaded) {
+            if (frame > -1 && this.isLoaded) {
                 var frameObject = this.spriteSheet.getFrame(frame);
                 if (!frameObject) {
                     return false;
@@ -118,7 +113,7 @@ define(["require", "exports", "../display/DisplayObject", "../../createts/util/P
             _super.prototype.onTick.call(this, delta);
             if (this.paused == false) {
                 this._queue.onTick(delta);
-                this.currentFrame = this._queue.getFrame();
+                this.frame = this._queue.getFrame();
             }
         };
         ImageSequence.prototype.getTotalFrames = function () {

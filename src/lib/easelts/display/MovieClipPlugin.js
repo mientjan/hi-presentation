@@ -20,5 +20,6 @@ define(["require", "exports", "../../tweents/Tween", "./MovieClip"], function (r
         MovieClipPlugin.priority = 100;
         return MovieClipPlugin;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = MovieClipPlugin;
 });

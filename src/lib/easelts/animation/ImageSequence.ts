@@ -30,14 +30,14 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 	//
 	//private _onComplete:Function = null;
 	//
-	public time:number = 0;
-	public timeDuration:number = 0;
-	public frames:number = 0;
-	public paused:boolean = true;
-	public fps:number;
+	//public time:number = 0;
+	//public timeDuration:number = 0;
+	//public frameTime:number = 0;
 	public spriteSheet:SpriteSheet = null;
-	public frameTime:number = 0;
-	public currentFrame:number = 0;
+	public frames:number = 0;
+	public frame:number = 0;
+	public paused:boolean = true;
+	protected _fps:number;
 	//
 	public isLoaded:boolean = false;
 
@@ -57,7 +57,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 		super(width, height, x, y, regX, regY);
 
 		this.spriteSheet = spriteSheet;
-		this.fps = fps;
+		this._fps = fps;
 		this._queue = new AnimationQueue(fps);
 	}
 
@@ -71,8 +71,6 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 		}
 
 		this.frames = this.spriteSheet.getNumFrames();
-		this.frameTime = 1000 / this.fps;
-		this.timeDuration = this.frames * this.frameTime;
 	}
 
 	public load( onProgress?:(progress:number) => any):Promise<ImageSequence>
@@ -97,11 +95,11 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 
 	public draw(ctx:CanvasRenderingContext2D, ignoreCache:boolean):boolean
 	{
-		var frame = this.currentFrame;
+		var frame = this.frame;
 		var width = this.width;
 		var height = this.height;
 
-		if( this.currentFrame > -1 && this.isLoaded )
+		if( frame > -1 && this.isLoaded )
 		{
 			var frameObject = this.spriteSheet.getFrame(frame);
 
@@ -195,7 +193,7 @@ class ImageSequence extends DisplayObject implements ILoadable<ImageSequence>, I
 		if(this.paused == false)
 		{
 			this._queue.onTick(delta);
-			this.currentFrame = this._queue.getFrame();
+			this.frame = this._queue.getFrame();
 		}
 	}
 

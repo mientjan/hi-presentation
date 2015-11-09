@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../display/DisplayObject"], function (require, exports, DisplayObject_1) {
     var now = (window.performance && window.performance.now) ? window.performance.now.bind(performance) : Date.now;
@@ -64,5 +63,6 @@ define(["require", "exports", "../display/DisplayObject"], function (require, ex
         };
         return Stats;
     })(DisplayObject_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Stats;
 });

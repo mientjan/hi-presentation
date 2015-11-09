@@ -42,5 +42,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return SignalConnection;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SignalConnection;
 });

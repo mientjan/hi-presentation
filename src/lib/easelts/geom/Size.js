@@ -38,5 +38,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return Size;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Size;
 });

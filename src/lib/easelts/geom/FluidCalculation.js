@@ -111,5 +111,6 @@ define(["require", "exports", "./FluidMeasurementsUnit", "../enum/MeasurementUni
         FluidCalculation._spaceSplit = /\s+/;
         return FluidCalculation;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FluidCalculation;
 });

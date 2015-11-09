@@ -23,5 +23,6 @@ define(["require", "exports", "../geom/Size"], function (require, exports, Size_
         };
         return ArrayUtil;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArrayUtil;
 });

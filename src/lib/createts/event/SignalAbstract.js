@@ -114,5 +114,6 @@ define(["require", "exports", "./SignalConnection"], function (require, exports,
         SignalAbstract.DISPATCHING_SENTINEL = new SignalConnection_1.default(null, null);
         return SignalAbstract;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SignalAbstract;
 });

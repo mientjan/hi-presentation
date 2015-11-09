@@ -43,5 +43,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return Filter;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Filter;
 });

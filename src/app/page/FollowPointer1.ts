@@ -15,7 +15,7 @@ import SpriteSheet from "../../lib/easelts/display/SpriteSheet";
 import * as Functional from "../../lib/createts/util/Functional";
 import Bitmap from "../../lib/easelts/display/Bitmap";
 
-class FollowPointer extends Container<DisplayObject>
+class FollowPointer1 extends Container<DisplayObject>
 {
 	sequence:ImageSequence;
 	loader:Loader = new Loader('50%', '50%');
@@ -36,7 +36,7 @@ class FollowPointer extends Container<DisplayObject>
 		var bitmap = new Bitmap(this.buffer, '100%', '100%');
 		this.hitArea = new RectangleColor('#000', '100%', '100%');
 		this.addChild(this.hitArea);
-		this.hitArea.compositeOperation = FollowPointer.COMPOSITE_OPERATION_DARKER;
+		this.hitArea.compositeOperation = FollowPointer1.COMPOSITE_OPERATION_DARKER;
 		//this.hitArea.alpha = 0.1;
 
 		this.sequence = new ImageSequence(SpriteSheet.createFromString(ListUtil.createList(0, 96, (index) =>
@@ -149,4 +149,4 @@ class FollowPointer extends Container<DisplayObject>
 
 }
 
-export default FollowPointer;
+export default FollowPointer1;

@@ -139,5 +139,6 @@ define(["require", "exports", "../../createts/event/Signal1"], function (require
         Interval.isRunning = false;
         return Interval;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Interval;
 });

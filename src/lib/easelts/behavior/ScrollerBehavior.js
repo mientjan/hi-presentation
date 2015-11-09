@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./AbstractBehavior", "../display/Container", "../../zynga/Scroller"], function (require, exports, AbstractBehavior_1, Container_1, Scroller_1) {
     var ScrollerBehavior = (function (_super) {
@@ -75,5 +74,6 @@ define(["require", "exports", "./AbstractBehavior", "../display/Container", "../
         };
         return ScrollerBehavior;
     })(AbstractBehavior_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ScrollerBehavior;
 });

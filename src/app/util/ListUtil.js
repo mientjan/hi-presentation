@@ -24,5 +24,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return ListUtil;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ListUtil;
 });

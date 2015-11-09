@@ -28,8 +28,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"], function (require, exports, Bitmap_1, Rectangle_1, Vector2_1) {
     var BitmapProjective = (function (_super) {
@@ -268,6 +267,7 @@ define(["require", "exports", "./Bitmap", "../geom/Rectangle", "../geom/Vector2"
         };
         return BitmapProjective;
     })(Bitmap_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = BitmapProjective;
     var Matrix = (function () {
         function Matrix(w, h, values) {

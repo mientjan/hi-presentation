@@ -7,5 +7,6 @@ define(["require", "exports"], function (require, exports) {
         VAlign.CENTER = "center";
         return VAlign;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = VAlign;
 });

@@ -134,8 +134,6 @@ class ScrollingPage extends Container<DisplayObject>
 
 		if(this.sequence.isLoaded)
 		{
-			var framePerPosition = 2;
-
 			if(this.positionTo.y < (this.positionLock.y|0)){
 
 				this.positionTo.y++;
@@ -144,7 +142,7 @@ class ScrollingPage extends Container<DisplayObject>
 			} else {
 
 			}
-			this.sequence.currentFrame = this.positionTo.y|0;
+			this.sequence.frame = this.positionTo.y|0;
 			//console.log(this.positionTo.y);
 
 		}

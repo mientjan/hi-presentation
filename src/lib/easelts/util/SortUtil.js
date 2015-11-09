@@ -110,5 +110,6 @@ define(["require", "exports", "../geom/Bounds", "../geom/Vector2"], function (re
         };
         return SortUtil;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SortUtil;
 });

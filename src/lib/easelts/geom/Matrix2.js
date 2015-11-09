@@ -242,5 +242,6 @@ define(["require", "exports", "./Point"], function (require, exports, Point_1) {
         Matrix2.DEG_TO_RAD = Math.PI / 180;
         return Matrix2;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Matrix2;
 });

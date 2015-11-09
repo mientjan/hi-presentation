@@ -23,9 +23,9 @@ class AnimationQueue extends QueueList
 			var from = this.current.from;
 			var to = this.current.to;
 			var duration = this.current.duration;
-			var frame = duration * this._time / (duration * this._fpms);
+			var frame = (duration * this._time / (duration * this._fpms));
 
-			this.frame = frame;
+			this.frame = from + (frame % duration);
 
 			if(times > -1 && times - (frame / duration) < 0)
 			{

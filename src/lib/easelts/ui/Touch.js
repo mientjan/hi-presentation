@@ -188,5 +188,6 @@ define(["require", "exports", "./TouchInjectProperties"], function (require, exp
         };
         return Touch;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Touch;
 });

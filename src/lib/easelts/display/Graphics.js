@@ -748,5 +748,6 @@ define(["require", "exports", "../util/Methods"], function (require, exports, Me
         return Graphics;
     })();
     Graphics._canvas.width = Graphics._canvas.height = 1;
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Graphics;
 });

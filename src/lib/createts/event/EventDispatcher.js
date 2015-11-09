@@ -185,5 +185,6 @@ define(["require", "exports", "./Event"], function (require, exports, Event_1) {
         };
         return EventDispatcher;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = EventDispatcher;
 });

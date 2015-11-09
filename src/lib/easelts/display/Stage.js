@@ -29,8 +29,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "./DisplayObject", "./Container", "../geom/Size", "../geom/PointerData", "../event/PointerEvent", "../../createts/event/Signal", "../../createts/util/Interval", "../../easelts/ui/Touch", "../component/Stats", "../data/StageOption"], function (require, exports, DisplayObject_1, Container_1, Size_1, PointerData_1, PointerEvent_1, Signal_1, Interval_1, Touch_1, Stats_1, StageOption_1) {
     var Stage = (function (_super) {
@@ -556,5 +555,6 @@ define(["require", "exports", "./DisplayObject", "./Container", "../geom/Size", 
         Stage.EVENT_STAGE_MOUSE_MOVE = 'stagemousemove';
         return Stage;
     })(Container_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Stage;
 });

@@ -47,5 +47,6 @@ define(["require", "exports"], function (require, exports) {
         return Shadow;
     })();
     Shadow.identity = new Shadow("transparent", 0, 0, 0);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Shadow;
 });

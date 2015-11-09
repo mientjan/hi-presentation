@@ -48,7 +48,11 @@ class KeydownPage extends Container<DisplayObject>
 
 		for(var i = 0; i < 10; i++)
 		{
-			this.keycode[KeyCode['NUM_' + i]] = [frames*i, frames * (i+1) - 1];
+			if(i == 9) {
+				this.keycode[KeyCode['NUM_' + i]] = [frames*i, frames * (i+1) - 2];
+			} else {
+				this.keycode[KeyCode['NUM_' + i]] = [frames*i, frames * (i+1) ];
+			}
 		}
 
 		this.spriteSheet = new SpriteSheet(data);

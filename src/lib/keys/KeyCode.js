@@ -102,5 +102,6 @@ define(["require", "exports"], function (require, exports) {
         KeyCode.ADD = 187;
         return KeyCode;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = KeyCode;
 });

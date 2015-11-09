@@ -28,8 +28,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../../createts/event/EventDispatcher", "../../createts/event/Signal2", "../util/UID", "../util/Methods", "./Shadow", "../geom/FluidCalculation", "../geom/Matrix2", "../geom/Rectangle", "../geom/Point"], function (require, exports, EventDispatcher_1, Signal2_1, UID_1, Methods, Shadow_1, FluidCalculation_1, Matrix2_1, Rectangle_1, Point_1) {
     var DisplayObject = (function (_super) {
@@ -777,5 +776,6 @@ define(["require", "exports", "../../createts/event/EventDispatcher", "../../cre
         DisplayObject._nextCacheID = 1;
         return DisplayObject;
     })(EventDispatcher_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DisplayObject;
 });

@@ -59,6 +59,10 @@ define(["require", "exports"], function (require, exports) {
             fromValue += (toValue - fromValue) * alpha;
             return fromValue;
         };
+        MathUtil.lerpVector2 = function (fromValue, toValue, alpha) {
+            fromValue.x += (toValue.x - fromValue.x) * alpha;
+            fromValue.y += (toValue.y - fromValue.y) * alpha;
+        };
         MathUtil.random16 = function () {
             return (65280 * Math.random() + 255 * Math.random()) / 65535;
         };
@@ -116,5 +120,6 @@ define(["require", "exports"], function (require, exports) {
         MathUtil.radianToDegreesFactor = 180 / Math.PI;
         return MathUtil;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = MathUtil;
 });
