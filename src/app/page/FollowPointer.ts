@@ -4,7 +4,7 @@ import AutoScaleBehavior from "../../lib/easelts/behavior/AutoScaleBehavior";
 import DisplayObject from "../../lib/easelts/display/DisplayObject";
 import Point from "../../lib/easelts/geom/Point";
 import Container from "../../lib/easelts/display/Container";
-import MouseEvent from "lib/easelts/event/MouseEvent";
+import MouseEvent from "../../lib/easelts/event/MouseEvent";
 import ListUtil from "../util/ListUtil";
 import ImageSequence from "../../lib/easelts/animation/ImageSequence";
 import Loader from "../controls/Loader";

@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", "../../lib/easelts/display/DisplayObject", "../../lib/easelts/geom/Point", "../../lib/easelts/display/Container", "../util/ListUtil", "../../lib/easelts/animation/ImageSequence", "../controls/Loader", "../../lib/easelts/behavior/ButtonBehavior", "../../lib/easelts/component/RectangleColor", "../../lib/easelts/util/MathUtil", "../../lib/easelts/display/SpriteSheet", "../../lib/createts/util/Functional"], function (require, exports, AutoScaleBehavior_1, DisplayObject_1, Point_1, Container_1, ListUtil_1, ImageSequence_1, Loader_1, ButtonBehavior_1, RectangleColor_1, MathUtil_1, SpriteSheet_1, Functional) {
     var FollowPointer = (function (_super) {
@@ -99,5 +98,6 @@ define(["require", "exports", "../../lib/easelts/behavior/AutoScaleBehavior", ".
         };
         return FollowPointer;
     })(Container_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = FollowPointer;
 });
