@@ -20,9 +20,10 @@ class Loader extends Container<any>
 	{
 		var g = this.shape.graphics.clear();
 
-		g.beginFill('#000')
+		g.beginFill('#FFF')
 		g.arc(0, 0, 10, 0, (progress * 2) * Math.PI, false);
 
+		this.text.color = '#FFF';
 		this.text.text = '' + progress + '%';
 	}
 }

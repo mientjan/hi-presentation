@@ -232,6 +232,8 @@ class AutoScaleBehavior extends AbstractBehavior
 
 	private updateScale(width?:number, height?:number)
 	{
+		console.log(arguments);
+
 		if(!this.owner || !this.owner.parent)
 		{
 			return;
@@ -247,6 +249,7 @@ class AutoScaleBehavior extends AbstractBehavior
 
 			if(this._alwaysCover)
 			{
+				console.log(Math.max(width / ownerWidth, height / ownerHeight));
 				this.owner.scaleX = this.owner.scaleY = Math.max(width / ownerWidth, height / ownerHeight);
 			}
 			else if(this._alwaysVisible)

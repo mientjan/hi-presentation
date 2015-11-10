@@ -145,6 +145,7 @@ define(["require", "exports", "./AbstractBehavior", "../geom/Size"], function (r
             this.updateScale();
         };
         AutoScaleBehavior.prototype.updateScale = function (width, height) {
+            console.log(arguments);
             if (!this.owner || !this.owner.parent) {
                 return;
             }
@@ -154,6 +155,7 @@ define(["require", "exports", "./AbstractBehavior", "../geom/Size"], function (r
                 var ownerWidth = this.owner.width;
                 var ownerHeight = this.owner.height;
                 if (this._alwaysCover) {
+                    console.log(Math.max(width / ownerWidth, height / ownerHeight));
                     this.owner.scaleX = this.owner.scaleY = Math.max(width / ownerWidth, height / ownerHeight);
                 }
                 else if (this._alwaysVisible) {

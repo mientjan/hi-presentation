@@ -26,6 +26,9 @@ class FollowPointer extends Container<DisplayObject>
 	offset:number = 0; //25;
 	buffer:HTMLCanvasElement = document.createElement('canvas'); //25;
 
+	sw:number = 1;
+	sh:number = 1;
+
 	constructor()
 	{
 		super('100%', '100%');
@@ -56,7 +59,7 @@ class FollowPointer extends Container<DisplayObject>
 		});
 		this.sequence.alpha = 1;
 
-		this.sequence.setGeomTransform(200, 200, '50%', '50%', '50%', '50%');
+		this.sequence.setGeomTransform(400, 400, '50%', '50%', '50%', '50%');
 
 		this.enableMouseInteraction();
 
@@ -64,32 +67,39 @@ class FollowPointer extends Container<DisplayObject>
 		this.bindEvents();
 	}
 
+	public changeScale = Functional.throttle(() => {
+		this.sw = .5;// + Math.random() * .5;
+		this.sh = .5;// + Math.random() * .5;
+
+		console.log('change');
+	}, 1000, this );
+
 	public draw(ctx, ignore)
 	{
 		var canvas = ctx.canvas;
 
-		var x = 0, y = 0, w = this.width * 1.05, h = this.height * 1.05;
+		var x = 0, y = 0, w = this.width * this.sw, h = this.height * this.sw;
 		x = (this.width-w) / 2;
 		y = (this.height-h) / 2;
 
 		var bctx = this.buffer.getContext('2d');
 
-		//bctx.fillStyle = '#000';
+		bctx.fillStyle = 'rgba(0,0,0,0.01';
 
 
 
-		//bctx.globalAlpha = .1;
-		//bctx.fillRect(0, 0, this.width, this.height);
-		bctx.globalAlpha = .5;
+		//bctx.globalAlpha = .01;
+		bctx.fillRect(0, 0, this.width, this.height);
+		bctx.globalAlpha = 1;
 		bctx.drawImage(canvas, 0, 0, this.width, this.height, x, y, w, h);
 
 		ctx.drawImage(this.buffer, 0, 0, this.width, this.height);
 
+		this.changeScale();
 		if(super.draw(ctx, ignore))
 		{
 			return true;
 		}
-
 
 	}
 

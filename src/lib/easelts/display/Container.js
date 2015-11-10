@@ -88,16 +88,27 @@ define(["require", "exports", "./DisplayObject", "../util/Methods"], function (r
             if (_super.prototype.draw.call(this, localCtx, ignoreCache)) {
                 return true;
             }
-            var list = this.children, child;
-            for (var i = 0, l = list.length; i < l; i++) {
-                child = list[i];
-                if (!child.isVisible()) {
-                    continue;
+            if (this._isRenderIsolated) {
+                localCtx = this._renderIsolationCanvas.getContext('2d');
+                if (this._willUpdateRenderIsolation) {
+                    localCtx.clearRect(0, 0, this.width, this.height);
                 }
-                localCtx.save();
-                child.updateContext(localCtx);
-                child.draw(localCtx);
-                localCtx.restore();
+            }
+            if (this._willUpdateRenderIsolation) {
+                var list = this.children, child;
+                for (var i = 0, l = list.length; i < l; i++) {
+                    child = list[i];
+                    if (!child.isVisible()) {
+                        continue;
+                    }
+                    localCtx.save();
+                    child.updateContext(localCtx);
+                    child.draw(localCtx);
+                    localCtx.restore();
+                }
+            }
+            if (this._isRenderIsolated) {
+                ctx.drawImage(this._renderIsolationCanvas, 0, 0, this.width, this.height);
             }
             return true;
         };

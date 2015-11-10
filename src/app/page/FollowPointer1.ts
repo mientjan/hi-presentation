@@ -78,9 +78,9 @@ class FollowPointer1 extends Container<DisplayObject>
 
 
 
-		bctx.globalAlpha = .1;
-		bctx.fillRect(0, 0, this.width, this.height);
-		bctx.globalAlpha = .5;
+		//bctx.globalAlpha = .1;
+		//bctx.fillRect(0, 0, this.width, this.height);
+		bctx.globalAlpha = 1;
 		bctx.drawImage(canvas, 0, 0, this.width, this.height, x, y, w, h);
 
 		ctx.drawImage(this.buffer, 0, 0, this.width, this.height);
